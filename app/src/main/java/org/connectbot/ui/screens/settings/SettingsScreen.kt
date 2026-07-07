@@ -28,9 +28,12 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
@@ -45,6 +48,7 @@ import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.FontDownload
 import androidx.compose.material.icons.filled.Terminal
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -203,6 +207,13 @@ fun SettingsScreen(
         onBellVolumeChange = viewModel::updateBellVolume,
         onBellVibrateChange = viewModel::updateBellVibrate,
         onBellNotificationChange = viewModel::updateBellNotification,
+        onWebDavUrlChange = viewModel::updateWebDavUrl,
+        onWebDavUsernameChange = viewModel::updateWebDavUsername,
+        onWebDavPasswordChange = viewModel::updateWebDavPassword,
+        onWebDavRemotePathChange = viewModel::updateWebDavRemotePath,
+        onWebDavEncryptionPasswordChange = viewModel::updateWebDavEncryptionPassword,
+        onRunWebDavBackup = viewModel::runWebDavBackup,
+        onRunWebDavRestore = viewModel::runWebDavRestore,
         modifier = modifier,
     )
 }
@@ -248,6 +259,13 @@ fun SettingsScreenContent(
     onBellVolumeChange: (Float) -> Unit,
     onBellVibrateChange: (Boolean) -> Unit,
     onBellNotificationChange: (Boolean) -> Unit,
+    onWebDavUrlChange: (String) -> Unit,
+    onWebDavUsernameChange: (String) -> Unit,
+    onWebDavPasswordChange: (String) -> Unit,
+    onWebDavRemotePathChange: (String) -> Unit,
+    onWebDavEncryptionPasswordChange: (String) -> Unit,
+    onRunWebDavBackup: () -> Unit,
+    onRunWebDavRestore: () -> Unit,
     modifier: Modifier = Modifier,
     highlightItem: String? = null,
 ) {
@@ -339,6 +357,23 @@ fun SettingsScreenContent(
                     summary = stringResource(R.string.pref_backupkeys_summary),
                     checked = uiState.backupkeys,
                     onCheckedChange = onBackupkeysChange,
+                )
+            }
+
+            item {
+                PreferenceCategory(title = stringResource(R.string.pref_webdav_backup_category))
+            }
+
+            item {
+                WebDavBackupPreference(
+                    uiState = uiState,
+                    onUrlChange = onWebDavUrlChange,
+                    onUsernameChange = onWebDavUsernameChange,
+                    onPasswordChange = onWebDavPasswordChange,
+                    onRemotePathChange = onWebDavRemotePathChange,
+                    onEncryptionPasswordChange = onWebDavEncryptionPasswordChange,
+                    onBackup = onRunWebDavBackup,
+                    onRestore = onRunWebDavRestore,
                 )
             }
 
@@ -774,6 +809,88 @@ private fun SwitchPreference(
             ),
             modifier = Modifier.clickable { onCheckedChange(!checked) },
         )
+        HorizontalDivider()
+    }
+}
+
+@Composable
+private fun WebDavBackupPreference(
+    uiState: SettingsUiState,
+    onUrlChange: (String) -> Unit,
+    onUsernameChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onRemotePathChange: (String) -> Unit,
+    onEncryptionPasswordChange: (String) -> Unit,
+    onBackup: () -> Unit,
+    onRestore: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+            OutlinedTextField(
+                value = uiState.webDavUrl,
+                onValueChange = onUrlChange,
+                label = { Text(stringResource(R.string.pref_webdav_url_title)) },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            OutlinedTextField(
+                value = uiState.webDavUsername,
+                onValueChange = onUsernameChange,
+                label = { Text(stringResource(R.string.pref_webdav_username_title)) },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+            )
+            OutlinedTextField(
+                value = uiState.webDavPassword,
+                onValueChange = onPasswordChange,
+                label = { Text(stringResource(R.string.pref_webdav_password_title)) },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+            )
+            OutlinedTextField(
+                value = uiState.webDavRemotePath,
+                onValueChange = onRemotePathChange,
+                label = { Text(stringResource(R.string.pref_webdav_remote_path_title)) },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+            )
+            OutlinedTextField(
+                value = uiState.webDavEncryptionPassword,
+                onValueChange = onEncryptionPasswordChange,
+                label = { Text(stringResource(R.string.pref_webdav_encryption_password_title)) },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+            )
+            Row(modifier = Modifier.padding(top = 12.dp)) {
+                Button(
+                    onClick = onBackup,
+                    enabled = !uiState.webDavOperationInProgress,
+                ) {
+                    Text(stringResource(R.string.pref_webdav_backup_now))
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                Button(
+                    onClick = onRestore,
+                    enabled = !uiState.webDavOperationInProgress,
+                ) {
+                    Text(stringResource(R.string.pref_webdav_restore_now))
+                }
+            }
+            if (uiState.webDavOperationInProgress) {
+                CircularProgressIndicator(
+                    modifier = Modifier.padding(top = 12.dp).size(24.dp),
+                    strokeWidth = 2.dp,
+                )
+            }
+            uiState.webDavStatusMessage?.let { message ->
+                Text(
+                    text = message,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(top = 8.dp),
+                )
+            }
+        }
         HorizontalDivider()
     }
 }
@@ -1613,6 +1730,13 @@ private fun SettingsScreenPreview() {
             onBellVolumeChange = {},
             onBellVibrateChange = {},
             onBellNotificationChange = {},
+            onWebDavUrlChange = {},
+            onWebDavUsernameChange = {},
+            onWebDavPasswordChange = {},
+            onWebDavRemotePathChange = {},
+            onWebDavEncryptionPasswordChange = {},
+            onRunWebDavBackup = {},
+            onRunWebDavRestore = {},
         )
     }
 }

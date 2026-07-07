@@ -402,6 +402,7 @@ dependencies {
     implementation(libs.androidx.preference)
     implementation(libs.material)
     implementation(libs.timber)
+    implementation(libs.okhttp)
 
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)

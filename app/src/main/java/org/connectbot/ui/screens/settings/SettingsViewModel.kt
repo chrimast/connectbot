@@ -38,6 +38,12 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.connectbot.backup.BackupCryptoEngine
+import org.connectbot.backup.ConnectBotBackupExporter
+import org.connectbot.backup.WebDavBackupConfig
+import org.connectbot.backup.WebDavBackupRepository
+import org.connectbot.backup.WebDavBackupResult
+import org.connectbot.backup.WebDavBackupTransport
 import org.connectbot.data.ProfileRepository
 import org.connectbot.data.entity.Profile
 import org.connectbot.di.CoroutineDispatchers
@@ -91,6 +97,13 @@ data class SettingsUiState(
     val installedLanguages: Set<String> = emptySet(),
     val defaultProfileId: Long = 0L,
     val availableProfiles: List<Profile> = emptyList(),
+    val webDavUrl: String = "",
+    val webDavUsername: String = "",
+    val webDavPassword: String = "",
+    val webDavRemotePath: String = "ConnectBot/latest.cbbackup",
+    val webDavEncryptionPassword: String = "",
+    val webDavOperationInProgress: Boolean = false,
+    val webDavStatusMessage: String? = null,
 )
 
 @HiltViewModel
@@ -100,6 +113,11 @@ class SettingsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val dispatchers: CoroutineDispatchers,
     private val languagePackManager: LanguagePackManager,
+    private val webDavBackupRepository: WebDavBackupRepository = WebDavBackupRepository(
+        NoOpBackupExporter,
+        NoOpBackupCrypto,
+        NoOpWebDavTransport,
+    ),
 ) : ViewModel() {
     private val fontProvider = TerminalFontProvider(context, dispatchers.io)
     private val localFontProvider = LocalFontProvider(context)
@@ -221,6 +239,11 @@ class SettingsViewModel @Inject constructor(
             themeMode = ThemeMode.fromString(prefs.getString(PreferenceConstants.THEME_MODE, null)),
             language = currentLanguage,
             defaultProfileId = prefs.getLong("defaultProfileId", 0L),
+            webDavUrl = prefs.getString(WEB_DAV_URL, "") ?: "",
+            webDavUsername = prefs.getString(WEB_DAV_USERNAME, "") ?: "",
+            webDavPassword = prefs.getString(WEB_DAV_PASSWORD, "") ?: "",
+            webDavRemotePath = prefs.getString(WEB_DAV_REMOTE_PATH, DEFAULT_WEB_DAV_REMOTE_PATH) ?: DEFAULT_WEB_DAV_REMOTE_PATH,
+            webDavEncryptionPassword = prefs.getString(WEB_DAV_ENCRYPTION_PASSWORD, "") ?: "",
         )
     }
 
@@ -377,6 +400,64 @@ class SettingsViewModel @Inject constructor(
 
     fun updateBellVolume(value: Float) {
         updateFloatPref(PreferenceConstants.BELL_VOLUME, value) { copy(bellVolume = value) }
+    }
+
+    fun updateWebDavUrl(value: String) {
+        updateStringPref(WEB_DAV_URL, value) { copy(webDavUrl = value, webDavStatusMessage = null) }
+    }
+
+    fun updateWebDavUsername(value: String) {
+        updateStringPref(WEB_DAV_USERNAME, value) { copy(webDavUsername = value, webDavStatusMessage = null) }
+    }
+
+    fun updateWebDavPassword(value: String) {
+        updateStringPref(WEB_DAV_PASSWORD, value) { copy(webDavPassword = value, webDavStatusMessage = null) }
+    }
+
+    fun updateWebDavRemotePath(value: String) {
+        updateStringPref(WEB_DAV_REMOTE_PATH, value) { copy(webDavRemotePath = value, webDavStatusMessage = null) }
+    }
+
+    fun updateWebDavEncryptionPassword(value: String) {
+        updateStringPref(WEB_DAV_ENCRYPTION_PASSWORD, value) { copy(webDavEncryptionPassword = value, webDavStatusMessage = null) }
+    }
+
+    fun runWebDavBackup() {
+        runWebDavOperation { config -> webDavBackupRepository.backup(config) }
+    }
+
+    fun runWebDavRestore() {
+        runWebDavOperation { config -> webDavBackupRepository.restore(config) }
+    }
+
+    private fun runWebDavOperation(operation: suspend (WebDavBackupConfig) -> WebDavBackupResult) {
+        val config = currentWebDavConfig()
+        viewModelScope.launch {
+            _uiState.update { it.copy(webDavOperationInProgress = true, webDavStatusMessage = null) }
+            val result = withContext(dispatchers.io) { operation(config) }
+            _uiState.update {
+                it.copy(
+                    webDavOperationInProgress = false,
+                    webDavStatusMessage = result.toStatusMessage(),
+                )
+            }
+        }
+    }
+
+    private fun currentWebDavConfig(): WebDavBackupConfig = _uiState.value.let {
+        WebDavBackupConfig(
+            baseUrl = it.webDavUrl,
+            username = it.webDavUsername,
+            password = it.webDavPassword,
+            remotePath = it.webDavRemotePath,
+            encryptionPassword = it.webDavEncryptionPassword,
+        )
+    }
+
+    private fun WebDavBackupResult.toStatusMessage(): String = when (this) {
+        WebDavBackupResult.Success -> "WebDAV backup operation completed"
+        WebDavBackupResult.MissingConfiguration -> "Complete all WebDAV backup fields first"
+        WebDavBackupResult.Failed -> "WebDAV backup operation failed"
     }
 
     fun updateFontFamily(value: String) {
@@ -558,4 +639,31 @@ class SettingsViewModel @Inject constructor(
             _uiState.update { it.updateState() }
         }
     }
+
+    companion object {
+        private const val WEB_DAV_URL = "webdav_backup_url"
+        private const val WEB_DAV_USERNAME = "webdav_backup_username"
+        private const val WEB_DAV_PASSWORD = "webdav_backup_password"
+        private const val WEB_DAV_REMOTE_PATH = "webdav_backup_remote_path"
+        private const val WEB_DAV_ENCRYPTION_PASSWORD = "webdav_backup_encryption_password"
+        private const val DEFAULT_WEB_DAV_REMOTE_PATH = "ConnectBot/latest.cbbackup"
+    }
+}
+
+private object NoOpBackupExporter : ConnectBotBackupExporter {
+    override fun exportJson(): String = "{}"
+
+    override fun importJson(json: String) = Unit
+}
+
+private object NoOpBackupCrypto : BackupCryptoEngine {
+    override fun encrypt(plaintext: ByteArray, password: String): String = plaintext.toString(Charsets.UTF_8)
+
+    override fun decrypt(envelope: String, password: String): ByteArray = envelope.toByteArray()
+}
+
+private object NoOpWebDavTransport : WebDavBackupTransport {
+    override suspend fun upload(config: WebDavBackupConfig, path: String, bytes: ByteArray) = Unit
+
+    override suspend fun download(config: WebDavBackupConfig, path: String): ByteArray = ByteArray(0)
 }

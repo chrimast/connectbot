@@ -303,6 +303,13 @@ class SettingsScreenTest {
                     onBellVolumeChange = {},
                     onBellVibrateChange = {},
                     onBellNotificationChange = {},
+                    onWebDavUrlChange = {},
+                    onWebDavUsernameChange = {},
+                    onWebDavPasswordChange = {},
+                    onWebDavRemotePathChange = {},
+                    onWebDavEncryptionPasswordChange = {},
+                    onRunWebDavBackup = {},
+                    onRunWebDavRestore = {},
                 )
             }
         }
