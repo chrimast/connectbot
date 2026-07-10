@@ -142,6 +142,7 @@ import org.connectbot.ui.LoadingScreen
 import org.connectbot.data.PresetScriptRepository
 import org.connectbot.ui.LocalTerminalManager
 import org.connectbot.ui.components.AuthBannerDialog
+import org.connectbot.ui.components.FloatingTextInputDialog
 import org.connectbot.ui.components.InlinePrompt
 import org.connectbot.ui.components.ResizeDialog
 import org.connectbot.ui.components.TERMINAL_KEYBOARD_HEIGHT_DP
@@ -565,6 +566,7 @@ fun ConsoleScreen(
     var showResizeDialog by remember { mutableStateOf(false) }
     var showDisconnectDialog by remember { mutableStateOf(false) }
     var showSessionPickerDialog by remember { mutableStateOf(false) }
+    var showTextInputDialog by remember { mutableStateOf(false) }
     var showPresetScriptDialog by remember { mutableStateOf(false) }
     var showExtraKeyboard by remember { mutableStateOf(true) } // Start visible to show animation
     var hasPlayedKeyboardAnimation by remember { mutableStateOf(false) }
@@ -603,7 +605,7 @@ fun ConsoleScreen(
 
     // Check if any modal (menu or dialog) is currently active
     val anyModalActive = showMenu || showUrlScanDialog || showResizeDialog ||
-        showDisconnectDialog || showPresetScriptDialog || isBiometricPromptActive || currentAuthBanner != null
+        showDisconnectDialog || showTextInputDialog || showPresetScriptDialog || isBiometricPromptActive || currentAuthBanner != null
 
     /**
      * Unified interaction handler for terminal and keyboard.
@@ -960,7 +962,7 @@ fun ConsoleScreen(
                                 handleTerminalInteraction = { handleTerminalInteraction(isTerminalTap = true) },
                                 onShowSoftwareKeyboardChange = { showSoftwareKeyboard = it },
                                 onImeVisibilityChange = { imeVisible = it },
-                                onTextInputRequest = { showPresetScriptDialog = true },
+                                onTextInputRequest = { showTextInputDialog = true },
                                 onDisconnectRequest = {
                                     bridge.dispatchDisconnect(DisconnectReason.USER_REQUESTED)
                                 },
@@ -1038,6 +1040,17 @@ fun ConsoleScreen(
                 onSelectBridge = { index ->
                     showSessionPickerDialog = false
                     selectBridgePreservingKeyboard(index)
+                },
+            )
+        }
+
+        if (showTextInputDialog && promptState == null && currentBridge != null) {
+            FloatingTextInputDialog(
+                bridge = currentBridge,
+                initialText = "",
+                onDismiss = {
+                    showTextInputDialog = false
+                    termFocusRequester.requestFocus()
                 },
             )
         }
