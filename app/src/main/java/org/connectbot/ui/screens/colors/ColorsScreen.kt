@@ -524,6 +524,7 @@ private fun SchemeItem(
                 }
 
                 DropdownMenu(
+                    shape = InputFieldShape,
                     expanded = showMenu,
                     onDismissRequest = { showMenu = false },
                 ) {

@@ -94,6 +94,7 @@ import org.connectbot.ui.LocalTerminalManager
 import org.connectbot.ui.PreviewScreen
 import org.connectbot.ui.components.DisconnectAllDialog
 import org.connectbot.ui.common.FlagIcon
+import org.connectbot.ui.common.InputFieldShape
 import org.connectbot.ui.components.ShortcutCustomizationDialog
 import org.connectbot.ui.theme.ConnectBotTheme
 import org.connectbot.util.IconStyle
@@ -348,6 +349,7 @@ fun HostListScreenContent(
                             Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.button_more_options))
                         }
                         DropdownMenu(
+                            shape = InputFieldShape,
                             expanded = showMenu,
                             onDismissRequest = { showMenu = false },
                         ) {
@@ -582,6 +584,7 @@ private fun HostListItem(
                                 Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.button_host_options))
                             }
                             DropdownMenu(
+                                shape = InputFieldShape,
                                 expanded = showMenu,
                                 onDismissRequest = { showMenu = false },
                             ) {

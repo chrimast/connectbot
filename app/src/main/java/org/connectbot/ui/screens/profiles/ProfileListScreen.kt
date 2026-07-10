@@ -212,6 +212,7 @@ private fun ProfileListItem(
                     )
                 }
                 DropdownMenu(
+                    shape = InputFieldShape,
                     expanded = showMenu,
                     onDismissRequest = { showMenu = false },
                 ) {

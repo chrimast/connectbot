@@ -552,6 +552,7 @@ private fun PubkeyListItem(
                             Icon(Icons.Default.MoreVert, stringResource(R.string.button_more_options))
                         }
                         DropdownMenu(
+                            shape = InputFieldShape,
                             expanded = showMenu,
                             onDismissRequest = { showMenu = false },
                         ) {
