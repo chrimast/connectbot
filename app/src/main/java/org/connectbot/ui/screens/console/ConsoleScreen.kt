@@ -54,7 +54,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ContentPaste
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.LinkOff
 import androidx.compose.material.icons.filled.MoreVert
@@ -139,9 +139,9 @@ import org.connectbot.terminal.ProgressState
 import org.connectbot.terminal.SelectionController
 import org.connectbot.terminal.Terminal
 import org.connectbot.ui.LoadingScreen
+import org.connectbot.data.PresetScriptRepository
 import org.connectbot.ui.LocalTerminalManager
 import org.connectbot.ui.components.AuthBannerDialog
-import org.connectbot.ui.components.FloatingTextInputDialog
 import org.connectbot.ui.components.InlinePrompt
 import org.connectbot.ui.components.ResizeDialog
 import org.connectbot.ui.components.TERMINAL_KEYBOARD_HEIGHT_DP
@@ -565,7 +565,7 @@ fun ConsoleScreen(
     var showResizeDialog by remember { mutableStateOf(false) }
     var showDisconnectDialog by remember { mutableStateOf(false) }
     var showSessionPickerDialog by remember { mutableStateOf(false) }
-    var showTextInputDialog by remember { mutableStateOf(false) }
+    var showPresetScriptDialog by remember { mutableStateOf(false) }
     var showExtraKeyboard by remember { mutableStateOf(true) } // Start visible to show animation
     var hasPlayedKeyboardAnimation by remember { mutableStateOf(false) }
     var showTitleBar by remember { mutableStateOf(!titleBarHide) }
@@ -588,6 +588,10 @@ fun ConsoleScreen(
         .getOrNull(uiState.currentBridgeIndex)
     val currentBridgeId = currentBridge?.host?.id
 
+    // Preset scripts
+    val presetScriptRepository = remember { PresetScriptRepository(prefs) }
+    var presetScripts by remember { mutableStateOf(presetScriptRepository.getScripts()) }
+
     // Get current prompt state to check if biometric prompt is active
     val promptState by currentBridge?.promptManager?.promptState?.collectAsState()
         ?: remember { mutableStateOf(null) }
@@ -599,7 +603,7 @@ fun ConsoleScreen(
 
     // Check if any modal (menu or dialog) is currently active
     val anyModalActive = showMenu || showUrlScanDialog || showResizeDialog ||
-        showDisconnectDialog || showTextInputDialog || isBiometricPromptActive || currentAuthBanner != null
+        showDisconnectDialog || showPresetScriptDialog || isBiometricPromptActive || currentAuthBanner != null
 
     /**
      * Unified interaction handler for terminal and keyboard.
@@ -956,7 +960,7 @@ fun ConsoleScreen(
                                 handleTerminalInteraction = { handleTerminalInteraction(isTerminalTap = true) },
                                 onShowSoftwareKeyboardChange = { showSoftwareKeyboard = it },
                                 onImeVisibilityChange = { imeVisible = it },
-                                onTextInputRequest = { showTextInputDialog = true },
+                                onTextInputRequest = { showPresetScriptDialog = true },
                                 onDisconnectRequest = {
                                     bridge.dispatchDisconnect(DisconnectReason.USER_REQUESTED)
                                 },
@@ -1038,15 +1042,16 @@ fun ConsoleScreen(
             )
         }
 
-        if (showTextInputDialog && promptState == null && currentBridge != null) {
-            // TODO: Get selected text from TerminalEmulator when selection is implemented
-            val selectedText = ""
-
-            FloatingTextInputDialog(
-                bridge = currentBridge,
-                initialText = selectedText,
+        if (showPresetScriptDialog && promptState == null && currentBridge != null) {
+            PresetScriptPickerDialog(
+                scripts = presetScripts,
                 onDismiss = {
-                    showTextInputDialog = false
+                    showPresetScriptDialog = false
+                    termFocusRequester.requestFocus()
+                },
+                onRun = { script ->
+                    showPresetScriptDialog = false
+                    currentBridge.injectString(script.script)
                     termFocusRequester.requestFocus()
                 },
             )
@@ -1098,14 +1103,17 @@ fun ConsoleScreen(
                         }
                     }
 
-                    // Text Input button
+                    // Preset Script button
                     IconButton(
-                        onClick = { showTextInputDialog = true },
+                        onClick = {
+                            presetScripts = presetScriptRepository.getScripts()
+                            showPresetScriptDialog = true
+                        },
                         enabled = currentBridge != null,
                     ) {
                         Icon(
-                            Icons.Default.Edit,
-                            contentDescription = stringResource(R.string.console_menu_text_input),
+                            Icons.Default.Code,
+                            contentDescription = stringResource(R.string.preset_scripts_title),
                         )
                     }
 
