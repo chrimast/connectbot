@@ -26,6 +26,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -50,6 +51,7 @@ import androidx.compose.material.icons.filled.FontDownload
 import androidx.compose.material.icons.filled.Terminal
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -1027,10 +1029,18 @@ private fun ListPreferenceDialog(
         text = {
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 entries.forEach { (label, entryValue) ->
-                    ListItem(
-                        headlineContent = { Text(label) },
-                        modifier = Modifier.clickable { onConfirm(entryValue) },
-                    )
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 2.dp),
+                        shape = InputFieldShape,
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+                    ) {
+                        ListItem(
+                            headlineContent = { Text(label) },
+                            modifier = Modifier.clickable { onConfirm(entryValue) },
+                        )
+                    }
                 }
             }
         },
@@ -1117,9 +1127,16 @@ private fun LanguageListPreferenceDialog(
                     val state = downloadStates[tag]
                     val isDownloading = state is LanguageDownloadState.Downloading
                     val needsDownload = tag.isNotEmpty() && !installedLanguages.contains(tag)
-                    ListItem(
-                        headlineContent = { Text(label) },
-                        trailingContent = when {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 2.dp),
+                        shape = InputFieldShape,
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+                    ) {
+                        ListItem(
+                            headlineContent = { Text(label) },
+                            trailingContent = when {
                             isDownloading -> {
                                 {
                                     CircularProgressIndicator(
@@ -1152,6 +1169,7 @@ private fun LanguageListPreferenceDialog(
                         },
                         modifier = if (isDownloading) Modifier else Modifier.clickable { onEntryClick(tag) },
                     )
+                    }
                 }
             }
         },
