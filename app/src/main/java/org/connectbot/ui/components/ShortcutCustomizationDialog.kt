@@ -48,6 +48,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
@@ -55,7 +56,11 @@ import androidx.compose.ui.unit.dp
 import org.connectbot.R
 import org.connectbot.data.entity.Host
 import org.connectbot.ui.common.ColorOption
+import org.connectbot.ui.common.FlagIcon
+import org.connectbot.ui.common.findColorOption
 import org.connectbot.ui.common.getIconColors
+import org.connectbot.ui.common.resolveColorToHex
+import org.connectbot.ui.screens.hostlist.ConnectionState
 import org.connectbot.util.IconStyle
 import org.connectbot.util.ShortcutIconGenerator
 
@@ -78,10 +83,11 @@ fun ShortcutCustomizationDialog(
     var styleDropdownExpanded by remember { mutableStateOf(false) }
 
     val effectiveColor = if (useHostColor && host.color != null) host.color else selectedColor
+    val hexColor = resolveColorToHex(effectiveColor)
 
     val previewSizePx = with(density) { 72.dp.toPx().toInt() }
-    val previewBitmap: Bitmap = remember(effectiveColor, selectedStyle) {
-        ShortcutIconGenerator.generatePreviewBitmap(context, effectiveColor, selectedStyle, previewSizePx)
+    val previewBitmap: Bitmap = remember(hexColor, selectedStyle) {
+        ShortcutIconGenerator.generatePreviewBitmap(context, hexColor, selectedStyle, previewSizePx)
     }
 
     val selectedColorDisplay = findColorDisplayName(effectiveColor, iconColors)
@@ -157,8 +163,16 @@ fun ShortcutCustomizationDialog(
                         iconColors.forEach { color ->
                             DropdownMenuItem(
                                 text = { Text(color.localizedName) },
+                                leadingIcon = {
+                                    FlagIcon(
+                                        colorValue = color.countryCode,
+                                        borderColor = Color.Transparent,
+                                        connectionState = ConnectionState.UNKNOWN,
+                                        modifier = Modifier.size(24.dp),
+                                    )
+                                },
                                 onClick = {
-                                    selectedColor = color.hexValue
+                                    selectedColor = color.countryCode
                                     colorDropdownExpanded = false
                                 },
                                 contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
@@ -222,12 +236,8 @@ fun ShortcutCustomizationDialog(
 
 @Composable
 private fun findColorDisplayName(colorValue: String?, iconColors: List<ColorOption>): String {
-    if (colorValue == null) {
-        return iconColors.first().localizedName
-    }
-    return iconColors.find { it.hexValue.equals(colorValue, ignoreCase = true) }?.localizedName
-        ?: iconColors.find { it.englishName.equals(colorValue, ignoreCase = true) }?.localizedName
-        ?: colorValue
+    if (colorValue == null) return iconColors.first().localizedName
+    return findColorOption(colorValue)?.localizedName ?: colorValue
 }
 
 @Composable

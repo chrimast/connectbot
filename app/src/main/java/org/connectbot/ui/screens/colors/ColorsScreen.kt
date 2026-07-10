@@ -248,7 +248,7 @@ fun ColorsScreenContent(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.title_scheme_manager)) },
+                title = { Text(stringResource(R.string.title_scheme_manager), style = MaterialTheme.typography.titleMedium) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
@@ -309,10 +309,8 @@ fun ColorsScreenContent(
                         contentPadding = PaddingValues(
                             start = 16.dp,
                             end = 16.dp,
-                            top = 16.dp,
                             bottom = 104.dp,
                         ),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         items(uiState.schemes) { scheme ->
                             SchemeItem(
@@ -472,7 +470,7 @@ private fun SchemeItem(
     modifier: Modifier = Modifier,
 ) {
     Card(
-        modifier = modifier.fillMaxWidth().clickable(onClick = onClick),
+        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp).clickable(onClick = onClick),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
         ),
@@ -598,7 +596,7 @@ private fun NewSchemeDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.dialog_title_new_scheme)) },
+        title = { Text(stringResource(R.string.dialog_title_new_scheme), style = MaterialTheme.typography.titleMedium) },
         text = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -682,7 +680,7 @@ private fun DeleteSchemeDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.dialog_title_delete_scheme)) },
+        title = { Text(stringResource(R.string.dialog_title_delete_scheme), style = MaterialTheme.typography.titleMedium) },
         text = {
             Text(stringResource(R.string.dialog_message_delete_scheme, schemeName))
         },

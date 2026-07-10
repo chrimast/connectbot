@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -61,6 +62,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -68,12 +70,15 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.connectbot.BuildConfig
 import org.connectbot.R
 import org.connectbot.data.entity.ColorScheme
+import org.connectbot.ui.common.findColorOption
+import org.connectbot.ui.common.FlagIcon
 import org.connectbot.ui.common.getIconColors
 import org.connectbot.ui.common.getLocalizedColorSchemeDescription
 import org.connectbot.ui.common.getLocalizedFontDisplayName
 import org.connectbot.ui.components.FontDownloadProgressDialog
 import org.connectbot.util.LocalFontProvider
 import org.connectbot.util.TerminalFont
+import org.connectbot.ui.screens.hostlist.ConnectionState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -107,6 +112,7 @@ fun ProfileEditorScreen(
                         } else {
                             stringResource(R.string.profile_editor_title_edit)
                         },
+                        style = MaterialTheme.typography.titleMedium,
                     )
                 },
                 navigationIcon = {
@@ -672,14 +678,11 @@ private fun IconColorSelector(
     var expanded by remember { mutableStateOf(false) }
     val iconColors = getIconColors()
 
-    // Find the display name for the selected color
-    // Check by hex value first (current format), then by English name (legacy format)
+    // Resolve display name via findColorOption (countryCode → hex → englishName → null)
     val selectedDisplayName = if (selectedColor == null) {
         stringResource(R.string.profile_icon_color_none)
     } else {
-        iconColors.find { it.hexValue.equals(selectedColor, ignoreCase = true) }?.localizedName
-            ?: iconColors.find { it.englishName.equals(selectedColor, ignoreCase = true) }?.localizedName
-            ?: selectedColor
+        findColorOption(selectedColor)?.localizedName ?: selectedColor
     }
 
     Column(modifier = modifier) {
@@ -718,9 +721,16 @@ private fun IconColorSelector(
                 iconColors.forEach { color ->
                     DropdownMenuItem(
                         text = { Text(color.localizedName) },
+                        leadingIcon = {
+                            FlagIcon(
+                                colorValue = color.countryCode,
+                                borderColor = Color.Transparent,
+                                connectionState = ConnectionState.UNKNOWN,
+                                modifier = Modifier.size(24.dp),
+                            )
+                        },
                         onClick = {
-                            // Always store hex value in database (language-independent)
-                            onSelectColor(color.hexValue)
+                            onSelectColor(color.countryCode)
                             expanded = false
                         },
                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,

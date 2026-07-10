@@ -27,8 +27,8 @@ val AppTypography = Typography(
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
+        fontSize = 15.sp,
+        lineHeight = 20.sp,
         letterSpacing = 0.5.sp,
     ),
     titleLarge = TextStyle(
@@ -37,6 +37,13 @@ val AppTypography = Typography(
         fontSize = 22.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp,
+    ),
+    titleMedium = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Medium,
+        fontSize = 16.sp,
+        lineHeight = 22.sp,
+        letterSpacing = 0.15.sp,
     ),
     labelSmall = TextStyle(
         fontFamily = FontFamily.Default,

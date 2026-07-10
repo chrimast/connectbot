@@ -418,7 +418,7 @@
 	<string name="hostpref_nickname_title">"Nickname"</string>
 
 	<!-- Host color category preference title -->
-	<string name="hostpref_color_title">"Color category"</string>
+	<string name="hostpref_color_title">"Country/Region"</string>
 
 	<!-- Color category names used for visual identification of hosts. These appear in the color selector dropdown. -->
 	<!-- Color name for red (#F44336) -->
@@ -453,6 +453,21 @@
 	<string name="color_orange">Orange</string>
 	<!-- Color name for gray (#9E9E9E) -->
 	<string name="color_gray">Gray</string>
+
+	<!-- Country/Region identifiers for host color selection -->
+	<string name="country_cn">🇨🇳 China</string>
+	<string name="country_us">🇺🇸 United States</string>
+	<string name="country_hk">🇭🇰 Hong Kong</string>
+	<string name="country_jp">🇯🇵 Japan</string>
+	<string name="country_sg">🇸🇬 Singapore</string>
+	<string name="country_tw">🇹🇼 Taiwan</string>
+	<string name="country_de">🇩🇪 Germany</string>
+	<string name="country_ru">🇷🇺 Russia</string>
+	<string name="country_nl">🇳🇱 Netherlands</string>
+	<string name="country_fr">🇫🇷 France</string>
+	<string name="country_gb">🇬🇧 United Kingdom</string>
+	<string name="country_in">🇮🇳 India</string>
+	<string name="country_xx">🏳️ Other</string>
 
 	<!-- Host's default font size when opening the terminal in points (pt) -->
 	<string name="hostpref_fontsize_title">"Font size (pt)"</string>
@@ -664,6 +679,8 @@
 	<string name="list_menu_disconnect">"Disconnect all"</string>
 	<!-- Menu item to open the app settings screen -->
 	<string name="list_menu_settings">"Settings"</string>
+	<!-- Menu item to open the preset scripts management screen -->
+	<string name="list_menu_preset_scripts">"Preset Scripts"</string>
 
 	<!-- Context menu action to disconnect from the selected host -->
 	<string name="list_host_disconnect">"Disconnect"</string>
@@ -1449,4 +1466,26 @@
 	<string name="auth_prompt_title">Unlock ConnectBot</string>
 	<!-- Subtitle shown in the biometric/device credential authentication prompt -->
 	<string name="auth_prompt_subtitle">Verify your identity to continue</string>
+
+	<!-- Preset Scripts screen title -->
+	<string name="preset_scripts_title">Preset Scripts</string>
+	<!-- Message shown when no preset scripts exist -->
+	<string name="preset_scripts_empty">No preset scripts defined.\nTap + to add one.</string>
+	<!-- Description text shown at the top of the preset scripts list -->
+	<string name="preset_scripts_description">Tap a script to run it on the active terminal, or use Edit to modify it.</string>
+	<!-- Title for the Add Preset Script dialog -->
+	<string name="preset_script_add_title">Add Script</string>
+	<!-- Title for the Edit Preset Script dialog -->
+	<string name="preset_script_edit_title">Edit Script</string>
+	<!-- Label for preset script name input -->
+	<string name="preset_script_name_label">Script Name</string>
+	<!-- Label for preset script body/command input -->
+	<string name="preset_script_body_label">Script Content</string>
+	<!-- Save button for preset script editor -->
+	<string name="preset_script_save">Save</string>
+	<!-- Title for the preset script picker dialog in console -->
+	<string name="preset_script_picker_title">Preset Scripts</string>
+	<!-- Message when no scripts available in the picker -->
+	<string name="preset_script_picker_empty">No scripts defined</string>
+
 </resources>

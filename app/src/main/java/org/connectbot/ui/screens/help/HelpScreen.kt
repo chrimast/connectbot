@@ -79,7 +79,7 @@ fun HelpScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.title_help)) },
+                title = { Text(stringResource(R.string.title_help), style = MaterialTheme.typography.titleMedium) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.button_navigate_up))
@@ -207,7 +207,7 @@ private fun KeyboardShortcutsDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.keyboard_shortcuts)) },
+        title = { Text(stringResource(R.string.keyboard_shortcuts), style = MaterialTheme.typography.titleMedium) },
         text = {
             Column {
                 ShortcutRow(
@@ -270,7 +270,7 @@ private fun LogViewerDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.logs_title)) },
+        title = { Text(stringResource(R.string.logs_title), style = MaterialTheme.typography.titleMedium) },
         text = {
             Column(
                 modifier = Modifier.fillMaxHeight(0.7f),

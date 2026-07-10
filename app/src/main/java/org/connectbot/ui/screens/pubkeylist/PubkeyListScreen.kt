@@ -22,9 +22,9 @@ import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -54,6 +54,7 @@ import androidx.compose.material.icons.outlined.Fingerprint
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.LockOpen
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
@@ -62,7 +63,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FloatingActionButtonMenu
 import androidx.compose.material3.FloatingActionButtonMenuItem
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -322,7 +322,7 @@ fun PubkeyListScreenContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.title_pubkey_list)) },
+                title = { Text(stringResource(R.string.title_pubkey_list), style = MaterialTheme.typography.titleMedium) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.button_navigate_up))
@@ -408,12 +408,9 @@ fun PubkeyListScreenContent(
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(
-                            start = 16.dp,
-                            end = 16.dp,
-                            top = 16.dp,
+                            start = 16.dp, end = 16.dp,
                             bottom = 104.dp, // Extra padding to avoid FAB menu overlap (88dp + 16dp for menu padding)
                         ),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         items(
                             items = uiState.pubkeys,
@@ -480,143 +477,140 @@ private fun PubkeyListItem(
     var passwordCallback by remember { mutableStateOf<((String) -> Unit)?>(null) }
     var exportPassphraseCallback by remember { mutableStateOf<((String) -> Unit)?>(null) }
 
-    Column(modifier = modifier) {
-        ListItem(
-            headlineContent = {
-                Text(
-                    text = pubkey.nickname,
-                    fontWeight = FontWeight.Bold,
-                )
-            },
-            supportingContent = {
-                Text(
-                    stringResource(
-                        R.string.pubkey_type_label,
-                        pubkey.type,
-                    ),
-                )
-            },
-            leadingContent = {
-                val icon = when {
-                    pubkey.isBiometric -> Icons.Outlined.Fingerprint
-                    pubkey.encrypted -> Icons.Outlined.Lock
-                    else -> Icons.Outlined.LockOpen
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 4.dp)
+            .clickable {
+                onClick { _, callback ->
+                    // Show password dialog if needed
+                    passwordCallback = callback
+                    showPasswordDialog = true
                 }
-
-                val iconModifier = when {
-                    isLoaded ->
-                        Modifier
-                            .padding(2.dp)
-                            .border(
-                                width = 2.dp, // Border thickness
-                                color = Color.Green, // Border color
-                                shape = CircleShape, // Makes the border a circle
-                            )
-                            .clip(CircleShape)
-                            .padding(4.dp)
-
-                    else -> Modifier.padding(2.dp).clip(CircleShape).padding(4.dp)
-                }
-
-                Box(
-                    modifier = iconModifier,
-                ) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = when {
-                            pubkey.isBiometric -> stringResource(R.string.pubkey_biometric_description_icon)
-                            pubkey.encrypted -> stringResource(R.string.pubkey_encrypted_description)
-                            else -> stringResource(R.string.pubkey_not_encrypted_description)
-                        },
+            }
+            .testTag(PubkeyListTestTags.itemRow(pubkey.id)),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+    ) {
+        Column {
+            ListItem(
+                headlineContent = {
+                    Text(
+                        text = pubkey.nickname,
+                        fontWeight = FontWeight.Bold,
                     )
-                }
-            },
-            trailingContent = {
-                Box {
-                    IconButton(
-                        onClick = { showMenu = true },
-                        modifier = Modifier.testTag(PubkeyListTestTags.itemMenuButton(pubkey.id)),
-                    ) {
-                        Icon(Icons.Default.MoreVert, stringResource(R.string.button_more_options))
+                },
+                supportingContent = {
+                    Text(
+                        stringResource(
+                            R.string.pubkey_type_label,
+                            pubkey.type,
+                        ),
+                    )
+                },
+                leadingContent = {
+                    val icon = when {
+                        pubkey.isBiometric -> Icons.Outlined.Fingerprint
+                        pubkey.encrypted -> Icons.Outlined.Lock
+                        else -> Icons.Outlined.LockOpen
                     }
-                    DropdownMenu(
-                        expanded = showMenu,
-                        onDismissRequest = { showMenu = false },
-                    ) {
-                        // Edit key
-                        DropdownMenuItem(
-                            text = {
-                                Text(stringResource(R.string.list_pubkey_edit))
-                            },
-                            onClick = {
-                                showMenu = false
-                                onEdit()
-                            },
-                            leadingIcon = {
-                                Icon(Icons.Default.Edit, null)
-                            },
-                        )
 
-                        // Copy public key
-                        val isImported = pubkey.type == "IMPORTED"
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.pubkey_copy_public)) },
-                            onClick = {
-                                showMenu = false
-                                onCopyPublicKey()
-                            },
-                            leadingIcon = {
-                                Icon(Icons.Default.ContentCopy, null)
-                            },
-                            enabled = !isImported,
-                        )
-
-                        // Export public key to file
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.pubkey_export_public)) },
-                            onClick = {
-                                showMenu = false
-                                onExportPublicKey()
-                            },
-                            leadingIcon = {
-                                Icon(Icons.Default.FileDownload, null)
-                            },
-                            enabled = !isImported,
-                        )
-
-                        // Copy private key in OpenSSH format (not available for Keystore keys)
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    stringResource(
-                                        if (isImported) {
-                                            R.string.pubkey_copy_private
-                                        } else {
-                                            R.string.pubkey_copy_private_openssh
-                                        },
-                                    ),
+                    val iconModifier = when {
+                        isLoaded ->
+                            Modifier
+                                .padding(2.dp)
+                                .border(
+                                    width = 2.dp, // Border thickness
+                                    color = Color.Green, // Border color
+                                    shape = CircleShape, // Makes the border a circle
                                 )
-                            },
-                            onClick = {
-                                showMenu = false
-                                onCopyPrivateKeyOpenSSH { _, callback ->
-                                    passwordCallback = callback
-                                    showPasswordDialog = true
-                                }
-                            },
-                            leadingIcon = {
-                                Icon(Icons.Default.ContentCopy, null)
-                            },
-                            enabled = !pubkey.isBiometric,
-                        )
+                                .clip(CircleShape)
+                                .padding(4.dp)
 
-                        // Copy private key in PEM format (for non-imported keys)
-                        if (!isImported) {
+                        else -> Modifier.padding(2.dp).clip(CircleShape).padding(4.dp)
+                    }
+
+                    Box(
+                        modifier = iconModifier,
+                    ) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = when {
+                                pubkey.isBiometric -> stringResource(R.string.pubkey_biometric_description_icon)
+                                pubkey.encrypted -> stringResource(R.string.pubkey_encrypted_description)
+                                else -> stringResource(R.string.pubkey_not_encrypted_description)
+                            },
+                        )
+                    }
+                },
+                trailingContent = {
+                    Box {
+                        IconButton(
+                            onClick = { showMenu = true },
+                            modifier = Modifier.testTag(PubkeyListTestTags.itemMenuButton(pubkey.id)),
+                        ) {
+                            Icon(Icons.Default.MoreVert, stringResource(R.string.button_more_options))
+                        }
+                        DropdownMenu(
+                            expanded = showMenu,
+                            onDismissRequest = { showMenu = false },
+                        ) {
+                            // Edit key
                             DropdownMenuItem(
-                                text = { Text(stringResource(R.string.pubkey_copy_private_pem)) },
+                                text = {
+                                    Text(stringResource(R.string.list_pubkey_edit))
+                                },
                                 onClick = {
                                     showMenu = false
-                                    onCopyPrivateKeyPem { _, callback ->
+                                    onEdit()
+                                },
+                                leadingIcon = {
+                                    Icon(Icons.Default.Edit, null)
+                                },
+                            )
+
+                            // Copy public key
+                            val isImported = pubkey.type == "IMPORTED"
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.pubkey_copy_public)) },
+                                onClick = {
+                                    showMenu = false
+                                    onCopyPublicKey()
+                                },
+                                leadingIcon = {
+                                    Icon(Icons.Default.ContentCopy, null)
+                                },
+                                enabled = !isImported,
+                            )
+
+                            // Export public key to file
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.pubkey_export_public)) },
+                                onClick = {
+                                    showMenu = false
+                                    onExportPublicKey()
+                                },
+                                leadingIcon = {
+                                    Icon(Icons.Default.FileDownload, null)
+                                },
+                                enabled = !isImported,
+                            )
+
+                            // Copy private key in OpenSSH format (not available for Keystore keys)
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        stringResource(
+                                            if (isImported) {
+                                                R.string.pubkey_copy_private
+                                            } else {
+                                                R.string.pubkey_copy_private_openssh
+                                            },
+                                        ),
+                                    )
+                                },
+                                onClick = {
+                                    showMenu = false
+                                    onCopyPrivateKeyOpenSSH { _, callback ->
                                         passwordCallback = callback
                                         showPasswordDialog = true
                                     }
@@ -626,65 +620,65 @@ private fun PubkeyListItem(
                                 },
                                 enabled = !pubkey.isBiometric,
                             )
-                        }
 
-                        // Copy private key encrypted (for non-imported keys)
-                        if (!isImported) {
-                            DropdownMenuItem(
-                                text = { Text(stringResource(R.string.pubkey_copy_private_encrypted)) },
-                                onClick = {
-                                    showMenu = false
-                                    onCopyPrivateKeyEncrypt(
-                                        { _, callback ->
+                            // Copy private key in PEM format (for non-imported keys)
+                            if (!isImported) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.pubkey_copy_private_pem)) },
+                                    onClick = {
+                                        showMenu = false
+                                        onCopyPrivateKeyPem { _, callback ->
                                             passwordCallback = callback
                                             showPasswordDialog = true
-                                        },
-                                        { _, callback ->
-                                            exportPassphraseCallback = callback
-                                            showExportPassphraseDialog = true
-                                        },
+                                        }
+                                    },
+                                    leadingIcon = {
+                                        Icon(Icons.Default.ContentCopy, null)
+                                    },
+                                    enabled = !pubkey.isBiometric,
+                                )
+                            }
+
+                            // Copy private key encrypted (for non-imported keys)
+                            if (!isImported) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.pubkey_copy_private_encrypted)) },
+                                    onClick = {
+                                        showMenu = false
+                                        onCopyPrivateKeyEncrypt(
+                                            { _, callback ->
+                                                passwordCallback = callback
+                                                showPasswordDialog = true
+                                            },
+                                            { _, callback ->
+                                                exportPassphraseCallback = callback
+                                                showExportPassphraseDialog = true
+                                            },
+                                        )
+                                    },
+                                    leadingIcon = {
+                                        Icon(Icons.Default.Lock, null)
+                                    },
+                                    enabled = !pubkey.isBiometric,
+                                )
+                            }
+
+                            // Export private key to file in OpenSSH format
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        stringResource(
+                                            if (isImported) {
+                                                R.string.pubkey_export_private
+                                            } else {
+                                                R.string.pubkey_export_private_openssh
+                                            },
+                                        ),
                                     )
                                 },
-                                leadingIcon = {
-                                    Icon(Icons.Default.Lock, null)
-                                },
-                                enabled = !pubkey.isBiometric,
-                            )
-                        }
-
-                        // Export private key to file in OpenSSH format
-                        DropdownMenuItem(
-                            text = {
-                                Text(
-                                    stringResource(
-                                        if (isImported) {
-                                            R.string.pubkey_export_private
-                                        } else {
-                                            R.string.pubkey_export_private_openssh
-                                        },
-                                    ),
-                                )
-                            },
-                            onClick = {
-                                showMenu = false
-                                onExportPrivateKeyOpenSSH { _, callback ->
-                                    passwordCallback = callback
-                                    showPasswordDialog = true
-                                }
-                            },
-                            leadingIcon = {
-                                Icon(Icons.Default.FileDownload, null)
-                            },
-                            enabled = !pubkey.isBiometric,
-                        )
-
-                        // Export private key to file in PEM format (for non-imported keys)
-                        if (!isImported) {
-                            DropdownMenuItem(
-                                text = { Text(stringResource(R.string.pubkey_export_private_pem)) },
                                 onClick = {
                                     showMenu = false
-                                    onExportPrivateKeyPem { _, callback ->
+                                    onExportPrivateKeyOpenSSH { _, callback ->
                                         passwordCallback = callback
                                         showPasswordDialog = true
                                     }
@@ -694,100 +688,110 @@ private fun PubkeyListItem(
                                 },
                                 enabled = !pubkey.isBiometric,
                             )
-                        }
 
-                        // Export private key to file with encryption (for non-imported keys)
-                        if (!isImported) {
-                            DropdownMenuItem(
-                                text = { Text(stringResource(R.string.pubkey_export_private_encrypted)) },
-                                onClick = {
-                                    showMenu = false
-                                    onExportPrivateKeyEncrypt(
-                                        { _, callback ->
+                            // Export private key to file in PEM format (for non-imported keys)
+                            if (!isImported) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.pubkey_export_private_pem)) },
+                                    onClick = {
+                                        showMenu = false
+                                        onExportPrivateKeyPem { _, callback ->
                                             passwordCallback = callback
                                             showPasswordDialog = true
-                                        },
-                                        { _, callback ->
-                                            exportPassphraseCallback = callback
-                                            showExportPassphraseDialog = true
-                                        },
-                                    )
+                                        }
+                                    },
+                                    leadingIcon = {
+                                        Icon(Icons.Default.FileDownload, null)
+                                    },
+                                    enabled = !pubkey.isBiometric,
+                                )
+                            }
+
+                            // Export private key to file with encryption (for non-imported keys)
+                            if (!isImported) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.pubkey_export_private_encrypted)) },
+                                    onClick = {
+                                        showMenu = false
+                                        onExportPrivateKeyEncrypt(
+                                            { _, callback ->
+                                                passwordCallback = callback
+                                                showPasswordDialog = true
+                                            },
+                                            { _, callback ->
+                                                exportPassphraseCallback = callback
+                                                showExportPassphraseDialog = true
+                                            },
+                                        )
+                                    },
+                                    leadingIcon = {
+                                        Icon(Icons.Default.Lock, null)
+                                    },
+                                    enabled = !pubkey.isBiometric,
+                                )
+                            }
+
+                            // Delete
+                            DropdownMenuItem(
+                                text = { Text(stringResource(R.string.pubkey_delete)) },
+                                onClick = {
+                                    showMenu = false
+                                    showDeleteDialog = true
                                 },
                                 leadingIcon = {
-                                    Icon(Icons.Default.Lock, null)
+                                    Icon(Icons.Default.Delete, null)
                                 },
-                                enabled = !pubkey.isBiometric,
                             )
                         }
-
-                        // Delete
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.pubkey_delete)) },
-                            onClick = {
-                                showMenu = false
-                                showDeleteDialog = true
-                            },
-                            leadingIcon = {
-                                Icon(Icons.Default.Delete, null)
-                            },
-                        )
                     }
-                }
+                },
+            )
+        }
+    }
+
+    // Password dialog for unlocking key
+    if (showPasswordDialog && passwordCallback != null) {
+        PubkeyPasswordDialog(
+            pubkey = pubkey,
+            onDismiss = {
+                showPasswordDialog = false
+                passwordCallback = null
             },
-            modifier = Modifier.clickable {
-                onClick { _, callback ->
-                    // Show password dialog if needed
-                    passwordCallback = callback
-                    showPasswordDialog = true
-                }
-            }.testTag(PubkeyListTestTags.itemRow(pubkey.id)),
+            onProvidePassword = { password ->
+                passwordCallback?.invoke(password)
+                showPasswordDialog = false
+                passwordCallback = null
+            },
         )
-        HorizontalDivider()
+    }
 
-        // Password dialog for unlocking key
-        if (showPasswordDialog && passwordCallback != null) {
-            PubkeyPasswordDialog(
-                pubkey = pubkey,
-                onDismiss = {
-                    showPasswordDialog = false
-                    passwordCallback = null
-                },
-                onProvidePassword = { password ->
-                    passwordCallback?.invoke(password)
-                    showPasswordDialog = false
-                    passwordCallback = null
-                },
-            )
-        }
+    // Delete confirmation dialog
+    if (showDeleteDialog) {
+        PubkeyDeleteDialog(
+            pubkey = pubkey,
+            onDismiss = {
+                showDeleteDialog = false
+            },
+            onConfirm = {
+                showDeleteDialog = false
+                onDelete()
+            },
+        )
+    }
 
-        // Delete confirmation dialog
-        if (showDeleteDialog) {
-            PubkeyDeleteDialog(
-                pubkey = pubkey,
-                onDismiss = {
-                    showDeleteDialog = false
-                },
-                onConfirm = {
-                    showDeleteDialog = false
-                    onDelete()
-                },
-            )
-        }
-
-        // Export passphrase dialog
-        if (showExportPassphraseDialog && exportPassphraseCallback != null) {
-            ExportPassphraseDialog(
-                onDismiss = {
-                    showExportPassphraseDialog = false
-                    exportPassphraseCallback = null
-                },
-                onProvidePassphrase = { passphrase ->
-                    exportPassphraseCallback?.invoke(passphrase)
-                    showExportPassphraseDialog = false
-                    exportPassphraseCallback = null
-                },
-            )
-        }
+    // Export passphrase dialog
+    if (showExportPassphraseDialog && exportPassphraseCallback != null) {
+        ExportPassphraseDialog(
+            onDismiss = {
+                showExportPassphraseDialog = false
+                exportPassphraseCallback = null
+            },
+            onProvidePassphrase = { passphrase ->
+                exportPassphraseCallback?.invoke(passphrase)
+                showExportPassphraseDialog = false
+                exportPassphraseCallback = null
+            },
+        )
     }
 }
 
@@ -802,7 +806,7 @@ private fun PubkeyPasswordDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         icon = { Icon(Icons.Default.Lock, contentDescription = null) },
-        title = { Text(stringResource(R.string.pubkey_unlock)) },
+        title = { Text(stringResource(R.string.pubkey_unlock), style = MaterialTheme.typography.titleMedium) },
         text = {
             Column {
                 Text(
@@ -847,7 +851,7 @@ private fun PubkeyDeleteDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         icon = { Icon(Icons.Default.Delete, contentDescription = null) },
-        title = { Text(stringResource(R.string.pubkey_delete)) },
+        title = { Text(stringResource(R.string.pubkey_delete), style = MaterialTheme.typography.titleMedium) },
         text = {
             Text(stringResource(R.string.delete_message, pubkey.nickname))
         },
@@ -876,7 +880,7 @@ private fun NicknameConfirmationDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.pubkey_import_button)) },
+        title = { Text(stringResource(R.string.pubkey_import_button), style = MaterialTheme.typography.titleMedium) },
         text = {
             OutlinedTextField(
                 value = nickname,
@@ -925,7 +929,7 @@ private fun ImportPasswordDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         icon = { Icon(Icons.Default.Lock, contentDescription = null) },
-        title = { Text(stringResource(R.string.pubkey_import_encrypted_title)) },
+        title = { Text(stringResource(R.string.pubkey_import_encrypted_title), style = MaterialTheme.typography.titleMedium) },
         text = {
             Column {
                 Text(
@@ -1040,7 +1044,7 @@ private fun ImportFromClipboardDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         icon = { Icon(Icons.Default.ContentPaste, contentDescription = null) },
-        title = { Text(stringResource(R.string.pubkey_import_from_clipboard)) },
+        title = { Text(stringResource(R.string.pubkey_import_from_clipboard), style = MaterialTheme.typography.titleMedium) },
         text = {
             OutlinedTextField(
                 value = keyText,
@@ -1094,7 +1098,7 @@ private fun ExportPassphraseDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         icon = { Icon(Icons.Default.Lock, contentDescription = null) },
-        title = { Text(stringResource(R.string.pubkey_export_set_passphrase)) },
+        title = { Text(stringResource(R.string.pubkey_export_set_passphrase), style = MaterialTheme.typography.titleMedium) },
         text = {
             Column {
                 Text(

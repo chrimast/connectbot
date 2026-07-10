@@ -29,6 +29,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.Arrangement
@@ -49,6 +50,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ContentPaste
@@ -64,6 +66,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -126,6 +129,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.connectbot.R
+import org.connectbot.data.PresetScript
 import org.connectbot.data.entity.Host
 import org.connectbot.service.AuthBanner
 import org.connectbot.service.DisconnectReason
@@ -1059,6 +1063,7 @@ fun ConsoleScreen(
                             ?: stringResource(R.string.console_default_title),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.titleMedium,
                     )
                 },
                 modifier = Modifier
@@ -1365,6 +1370,60 @@ private fun SessionPickerDialog(
                             },
                             modifier = Modifier.fillMaxWidth(),
                         )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.button_cancel))
+            }
+        },
+    )
+}
+
+@Composable
+private fun PresetScriptPickerDialog(
+    scripts: List<PresetScript>,
+    onDismiss: () -> Unit,
+    onRun: (PresetScript) -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = stringResource(R.string.preset_script_picker_title),
+                style = MaterialTheme.typography.titleMedium,
+            )
+        },
+        text = {
+            if (scripts.isEmpty()) {
+                Text(stringResource(R.string.preset_script_picker_empty))
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 360.dp),
+                ) {
+                    itemsIndexed(scripts, key = { _, script -> script.id }) { index, script ->
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { onRun(script) }
+                                .padding(horizontal = 8.dp, vertical = 6.dp),
+                        ) {
+                            Text(script.name, style = MaterialTheme.typography.bodyLarge)
+                            Text(
+                                text = script.script,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                        if (index < scripts.lastIndex) {
+                            HorizontalDivider()
+                        }
                     }
                 }
             }

@@ -165,7 +165,7 @@ fun PaletteEditorScreenContent(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.title_palette_editor)) },
+                title = { Text(stringResource(R.string.title_palette_editor), style = MaterialTheme.typography.titleMedium) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
@@ -288,7 +288,7 @@ fun PaletteEditorScreenContent(
     if (uiState.showResetAllDialog) {
         AlertDialog(
             onDismissRequest = { onHideResetAllDialog() },
-            title = { Text(stringResource(R.string.dialog_title_reset_all)) },
+            title = { Text(stringResource(R.string.dialog_title_reset_all), style = MaterialTheme.typography.titleMedium) },
             text = { Text(stringResource(R.string.dialog_message_reset_all)) },
             confirmButton = {
                 TextButton(onClick = { onResetAllColors() }) {
@@ -656,7 +656,7 @@ private fun DuplicateSchemeDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.dialog_title_new_scheme)) },
+        title = { Text(stringResource(R.string.dialog_title_new_scheme), style = MaterialTheme.typography.titleMedium) },
         text = {
             OutlinedTextField(
                 value = name,

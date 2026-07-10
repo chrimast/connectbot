@@ -158,7 +158,7 @@
   <string name="list_pubkeyids_none">不使用密钥</string>
   <string name="list_pubkeyids_any">使用任何已解锁密钥</string>
   <string name="hostpref_nickname_title">昵称</string>
-  <string name="hostpref_color_title">颜色类型</string>
+  <string name="hostpref_color_title">国家地区</string>
   <string name="color_red">红色</string>
   <string name="color_pink">粉色</string>
   <string name="color_purple">紫色</string>
@@ -199,8 +199,8 @@
   <string name="hostpref_clear_password">清除已保存的密码</string>
   <string name="hostpref_hostname_title">主机</string>
   <string name="hostpref_port_title">端口</string>
-  <string name="hostpref_profile_title">个人资料</string>
-  <string name="hostpref_profile_summary">选择一个配置，以使用其终端设置。</string>
+  <string name="hostpref_profile_title">终端样式</string>
+  <string name="hostpref_profile_summary">选择一个终端样式，以使用其终端设置。</string>
   <string name="hostpref_profile_none">无（使用主机设置）</string>
   <string name="profile_controlled_setting">由配置文件控制</string>
   <string name="font_use_default">使用默认设置</string>
@@ -208,7 +208,7 @@
   <string name="pubkey_unknown">未知的密钥</string>
   <string name="colorscheme_default">默认</string>
   <string name="profile_editor_title_new">新建配置</string>
-  <string name="profile_editor_title_edit">编辑资料</string>
+  <string name="profile_editor_title_edit">编辑样式</string>
   <string name="profile_editor_save">保存</string>
   <string name="profile_editor_name_label">配置文件名称</string>
   <string name="profile_editor_section_icon_color">图标颜色</string>
@@ -223,7 +223,7 @@
   <string name="profile_editor_force_size_columns">列</string>
   <string name="profile_editor_force_size_rows">行数</string>
   <string name="profile_icon_color_none">无（使用主机颜色）</string>
-  <string name="profile_list_title">配置资料</string>
+  <string name="profile_list_title">终端样式</string>
   <string name="profile_list_create_profile">创建配置文件</string>
   <string name="profile_list_empty_message">目前还没有配置文件。点击“+”来创建一个。</string>
   <string name="profile_list_more_options">更多选项</string>
@@ -517,7 +517,7 @@
   <string name="colorscheme_gruvbox_dark_description">复古风格配色方案</string>
   <string name="colorscheme_monokai_description">灵感来源于 Sublime Text 的主题</string>
   <string name="colorscheme_tomorrow_night_description">简洁舒适的深色主题</string>
-  <string name="pref_profiles_category">配置资料</string>
+  <string name="pref_profiles_category">终端样式</string>
   <string name="pref_default_profile_title">默认配置</string>
   <string name="pref_default_profile_none">无（使用主机设置）</string>
   <string name="pref_alwaysvisible_summary">始终显示常用按键</string>
@@ -574,4 +574,41 @@
   <string name="pubkey_paste_from_clipboard" tools:machine_translated="true">从剪贴板粘贴</string>
   <string name="auth_banner_title" tools:machine_translated="true">来自 %1$s 的身份验证消息。</string>
   <string name="terminal_auth_banner_header" tools:machine_translated="true">[%1$s] 身份验证消息：</string>
+
+  <!-- Preset Scripts -->
+  <string name="list_menu_preset_scripts">预设脚本</string>
+  <string name="preset_scripts_title">预设脚本</string>
+  <string name="preset_scripts_empty">暂无预设脚本。\n点击 + 添加一个。</string>
+  <string name="preset_script_add_title">添加脚本</string>
+  <string name="preset_script_edit_title">编辑脚本</string>
+  <string name="preset_script_name_label">脚本名称</string>
+  <string name="preset_script_body_label">脚本内容</string>
+  <string name="preset_script_save">保存</string>
+  <string name="preset_script_picker_title">预设脚本</string>
+  <string name="preset_script_picker_empty">无已定义脚本</string>
+
+  <!-- WebDAV backup -->
+  <string name="pref_webdav_backup_category">WebDAV 备份</string>
+  <string name="pref_webdav_url_title">WebDAV 地址</string>
+  <string name="pref_webdav_username_title">用户名</string>
+  <string name="pref_webdav_password_title">WebDAV 密码</string>
+  <string name="pref_webdav_remote_path_title">远程路径</string>
+  <string name="pref_webdav_encryption_password_title">备份加密密码</string>
+  <string name="pref_webdav_backup_now">立即备份</string>
+  <string name="pref_webdav_restore_now">立即恢复</string>
+
+  <!-- Country/Region identifiers -->
+  <string name="country_cn">🇨🇳 中国</string>
+  <string name="country_us">🇺🇸 美国</string>
+  <string name="country_hk">🇭🇰 香港</string>
+  <string name="country_jp">🇯🇵 日本</string>
+  <string name="country_sg">🇸🇬 新加坡</string>
+  <string name="country_tw">🇹🇼 台湾</string>
+  <string name="country_de">🇩🇪 德国</string>
+  <string name="country_ru">🇷🇺 俄罗斯</string>
+  <string name="country_nl">🇳🇱 荷兰</string>
+  <string name="country_fr">🇫🇷 法国</string>
+  <string name="country_gb">🇬🇧 英国</string>
+  <string name="country_in">🇮🇳 印度</string>
+  <string name="country_xx">🏳️ 其他</string>
 </resources>

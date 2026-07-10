@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -80,7 +81,7 @@ fun ProfileListScreen(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.profile_list_title)) },
+                title = { Text(stringResource(R.string.profile_list_title), style = MaterialTheme.typography.titleMedium) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
@@ -126,6 +127,7 @@ fun ProfileListScreen(
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(start = 16.dp, end = 16.dp),
                 ) {
                     items(uiState.profiles, key = { it.id }) { profile ->
                         ProfileListItem(
@@ -153,7 +155,7 @@ fun ProfileListScreen(
     uiState.showDeleteDialog?.let { profile ->
         AlertDialog(
             onDismissRequest = { viewModel.hideDeleteDialog() },
-            title = { Text(stringResource(R.string.profile_delete_dialog_title)) },
+            title = { Text(stringResource(R.string.profile_delete_dialog_title), style = MaterialTheme.typography.titleMedium) },
             text = { Text(stringResource(R.string.profile_delete_dialog_message, profile.name)) },
             confirmButton = {
                 TextButton(
@@ -248,7 +250,7 @@ private fun CreateProfileDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.profile_create_dialog_title)) },
+        title = { Text(stringResource(R.string.profile_create_dialog_title), style = MaterialTheme.typography.titleMedium) },
         text = {
             Column {
                 OutlinedTextField(

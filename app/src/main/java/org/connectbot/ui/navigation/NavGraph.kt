@@ -40,6 +40,7 @@ import org.connectbot.ui.screens.hints.HintsScreen
 import org.connectbot.ui.screens.hosteditor.HostEditorScreen
 import org.connectbot.ui.screens.hostlist.HostListScreen
 import org.connectbot.ui.screens.portforwardlist.PortForwardListScreen
+import org.connectbot.ui.screens.presetscripts.PresetScriptListScreen
 import org.connectbot.ui.screens.profiles.ProfileEditorScreen
 import org.connectbot.ui.screens.profiles.ProfileListScreen
 import org.connectbot.ui.screens.pubkeyeditor.PubkeyEditorScreen
@@ -87,6 +88,9 @@ fun ConnectBotNavHost(
                 },
                 onNavigateToPortForwards = { host ->
                     navController.navigateSafely("${NavDestinations.PORT_FORWARD_LIST}/${host.id}")
+                },
+                onNavigateToPresetScripts = {
+                    navController.navigateSafely(NavDestinations.PRESET_SCRIPTS)
                 },
                 onNavigateToProfiles = {
                     navController.navigateSafely(NavDestinations.PROFILES)
@@ -164,6 +168,12 @@ fun ConnectBotNavHost(
             ),
         ) {
             PortForwardListScreen(
+                onNavigateBack = { navController.safePopBackStack() },
+            )
+        }
+
+        composable(NavDestinations.PRESET_SCRIPTS) {
+            PresetScriptListScreen(
                 onNavigateBack = { navController.safePopBackStack() },
             )
         }

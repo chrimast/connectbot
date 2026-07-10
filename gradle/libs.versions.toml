@@ -55,6 +55,7 @@ navigationTesting = "2.9.8"
 ui = "1.11.3"
 biometric = "1.4.0-alpha02"
 core = "1.19.0"
+coil = "3.1.0"
 
 [libraries]
 sshlib = { module = "org.connectbot:sshlib", version.ref = "sshlib" }
@@ -119,6 +120,8 @@ androidx-navigation-testing = { group = "androidx.navigation", name = "navigatio
 
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 ksp-gradle-plugin = { module = "com.google.devtools.ksp:symbol-processing-gradle-plugin", version.ref = "ksp" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+coil-svg = { module = "io.coil-kt.coil3:coil-svg", version.ref = "coil" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

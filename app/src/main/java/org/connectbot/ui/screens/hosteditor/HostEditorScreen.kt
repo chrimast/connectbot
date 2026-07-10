@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -57,6 +58,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -70,9 +72,12 @@ import org.connectbot.data.entity.Host
 import org.connectbot.data.entity.Profile
 import org.connectbot.data.entity.Pubkey
 import org.connectbot.ui.PreviewScreen
+import org.connectbot.ui.common.findColorOption
+import org.connectbot.ui.common.FlagIcon
 import org.connectbot.ui.common.getIconColors
 import org.connectbot.ui.common.getLocalizedColorSchemeDescription
 import org.connectbot.ui.common.getLocalizedFontDisplayName
+import org.connectbot.ui.screens.hostlist.ConnectionState
 import org.connectbot.ui.theme.ConnectBotTheme
 import org.connectbot.util.HostConstants
 import org.connectbot.util.LocalFontProvider
@@ -159,6 +164,7 @@ fun HostEditorScreenContent(
                         } else {
                             stringResource(R.string.hostpref_setting_title)
                         },
+                        style = MaterialTheme.typography.titleMedium,
                     )
                 },
                 navigationIcon = {
@@ -500,10 +506,9 @@ private fun ColorSelector(
     var expanded by remember { mutableStateOf(false) }
     val iconColors = getIconColors()
 
-    // Find the display name for the selected color
-    // Check by hex value first (current format), then by English name (legacy format)
-    val selectedDisplayName = iconColors.find { it.hexValue.equals(selectedColor, ignoreCase = true) }?.localizedName
-        ?: iconColors.find { it.englishName.equals(selectedColor, ignoreCase = true) }?.localizedName
+    // Find the display name for the selected color — use iconColors (localized) not findColorOption
+    val selectedDisplayName = iconColors.find { it.countryCode == selectedColor }?.localizedName
+        ?: findColorOption(selectedColor)?.countryCode
         ?: selectedColor
 
     Column(modifier = modifier) {
@@ -538,9 +543,16 @@ private fun ColorSelector(
                 iconColors.forEach { color ->
                     DropdownMenuItem(
                         text = { Text(color.localizedName) },
+                        leadingIcon = {
+                            FlagIcon(
+                                colorValue = color.countryCode,
+                                borderColor = Color.Transparent,
+                                connectionState = ConnectionState.UNKNOWN,
+                                modifier = Modifier.size(24.dp),
+                            )
+                        },
                         onClick = {
-                            // Always store hex value in database (language-independent)
-                            onColorSelect(color.hexValue)
+                            onColorSelect(color.countryCode)
                             expanded = false
                         },
                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
