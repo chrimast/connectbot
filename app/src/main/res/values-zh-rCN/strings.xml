@@ -260,7 +260,7 @@
   <string name="format_hostname">主机名</string>
   <string name="format_port">端口</string>
   <string name="list_menu_pubkeys">管理密钥</string>
-  <string name="list_menu_sortcolor">按国家地区排序</string>
+  <string name="list_menu_sortcolor">按国家排序</string>
   <string name="list_menu_sortname">按名称排序</string>
   <string name="list_menu_disconnect">断开所有连接</string>
   <string name="list_menu_settings">设置</string>
