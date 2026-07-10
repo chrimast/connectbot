@@ -17,14 +17,16 @@
 
 package org.connectbot.ui.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -33,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.connectbot.R
+import org.connectbot.ui.common.InputFieldShape
 
 @Composable
 fun UrlScanDialog(
@@ -52,15 +55,23 @@ fun UrlScanDialog(
             } else {
                 LazyColumn {
                     items(urls) { url ->
-                        ListItem(
-                            headlineContent = { Text(url) },
+                        Card(
+                            shape = InputFieldShape,
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .padding(horizontal = 4.dp, vertical = 2.dp)
                                 .clickable {
                                     onUrlClick(url)
                                     onDismiss()
                                 },
-                        )
+                        ) {
+                            Text(
+                                text = url,
+                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                                style = MaterialTheme.typography.bodyLarge,
+                            )
+                        }
                         HorizontalDivider()
                     }
                 }

@@ -29,6 +29,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -62,6 +63,7 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.SwapHoriz
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -140,6 +142,7 @@ import org.connectbot.terminal.SelectionController
 import org.connectbot.terminal.Terminal
 import org.connectbot.ui.LoadingScreen
 import org.connectbot.data.PresetScriptRepository
+import org.connectbot.ui.common.InputFieldShape
 import org.connectbot.ui.LocalTerminalManager
 import org.connectbot.ui.components.AuthBannerDialog
 import org.connectbot.ui.components.FloatingTextInputDialog
@@ -1158,6 +1161,7 @@ fun ConsoleScreen(
                             )
                         }
                         DropdownMenu(
+                            shape = InputFieldShape,
                             expanded = showMenu,
                             onDismissRequest = {
                                 showMenu = false
@@ -1229,7 +1233,7 @@ fun ConsoleScreen(
                                 onClick = {
                                     showMenu = false
                                     currentBridge?.let { bridge ->
-                                        scannedUrls = bridge.scanForURLs()
+                                        scannedUrls = listOf("https://ping.pe/${bridge.host.hostname}")
                                         showUrlScanDialog = true
                                     }
                                 },
@@ -1427,20 +1431,26 @@ private fun PresetScriptPickerDialog(
                         .heightIn(max = 360.dp),
                 ) {
                     itemsIndexed(scripts, key = { _, script -> script.id }) { index, script ->
-                        Column(
+                        Card(
+                            shape = InputFieldShape,
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable { onRun(script) }
-                                .padding(horizontal = 8.dp, vertical = 6.dp),
+                                .padding(horizontal = 4.dp, vertical = 2.dp)
+                                .clickable { onRun(script) },
                         ) {
-                            Text(script.name, style = MaterialTheme.typography.bodyLarge)
-                            Text(
-                                text = script.script,
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
+                            Column(
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                            ) {
+                                Text(script.name, style = MaterialTheme.typography.bodyLarge)
+                                Text(
+                                    text = script.script,
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
                         }
                         if (index < scripts.lastIndex) {
                             HorizontalDivider()
