@@ -176,7 +176,7 @@ fun ProfileEditorScreen(
                 // Icon Color Section
                 Text(
                     text = stringResource(R.string.profile_editor_section_icon_color),
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(bottom = 8.dp),
                 )
 
@@ -195,7 +195,7 @@ fun ProfileEditorScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.profile_editor_section_color_scheme),
-                        style = MaterialTheme.typography.titleLarge,
+                        style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.weight(1f),
                     )
                     IconButton(onClick = onNavigateToColors) {
@@ -218,7 +218,7 @@ fun ProfileEditorScreen(
                 // Font Section
                 Text(
                     text = stringResource(R.string.profile_editor_section_font),
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(bottom = 8.dp),
                 )
 
@@ -243,7 +243,7 @@ fun ProfileEditorScreen(
                 // Terminal Section
                 Text(
                     text = stringResource(R.string.profile_editor_section_terminal),
-                    style = MaterialTheme.typography.titleLarge,
+                    style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(bottom = 8.dp),
                 )
 
