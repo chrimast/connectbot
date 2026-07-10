@@ -150,9 +150,8 @@ fun HostEditorScreenContent(
     modifier: Modifier = Modifier,
 ) {
     var showProtocolMenu by remember { mutableStateOf(false) }
-    var expandedMode by remember(uiState.isLoading) {
-        mutableStateOf(hostId != -1L && !uiState.isNicknameMatching)
-    }
+    var expandedMode = true
+    var showAdvanced by remember { mutableStateOf(false) }
     val protocols = listOf("ssh", "telnet", "local")
 
     Scaffold(
@@ -183,12 +182,7 @@ fun HostEditorScreenContent(
                             onNavigateBack()
                         },
                         modifier = Modifier.testTag("add_host_button"),
-                        enabled = if (expandedMode) {
-                            // For local protocol, hostname can be blank
-                            uiState.protocol == "local" || uiState.hostname.isNotBlank()
-                        } else {
-                            uiState.quickConnect.isNotBlank()
-                        },
+                        enabled = uiState.protocol == "local" || uiState.hostname.isNotBlank(),
                     ) {
                         Text(stringResource(if (hostId == -1L) R.string.hostpref_add_host else R.string.hostpref_save_host))
                     }
@@ -205,85 +199,24 @@ fun HostEditorScreenContent(
                 .padding(16.dp)
                 .imePadding(),
         ) {
-            if (!expandedMode) {
-                // Quick connect mode
-                OutlinedTextField(
-                    shape = InputFieldShape,
-                    value = uiState.quickConnect,
-                    onValueChange = onQuickConnectChange,
-                    label = { Text(stringResource(R.string.host_editor_quick_connect_label)) },
-                    placeholder = { Text(stringResource(R.string.host_editor_quick_connect_placeholder)) },
-                    supportingText = { Text(stringResource(R.string.host_editor_quick_connect_example)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                )
+            // Nickname
+            OutlinedTextField(
+                shape = InputFieldShape,
+                value = uiState.nickname,
+                onValueChange = { onNicknameChange(it, expandedMode) },
+                label = { Text(stringResource(R.string.hostpref_nickname_title)) },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+            )
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { expandedMode = true }
-                        .padding(vertical = 4.dp),
-                ) {
-                    Text(
-                        text = stringResource(R.string.host_editor_show_advanced),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.primary,
-                    )
-                    Spacer(Modifier.width(4.dp))
-                    Icon(
-                        Icons.Default.ExpandMore,
-                        contentDescription = stringResource(R.string.expand),
-                        tint = MaterialTheme.colorScheme.primary,
-                    )
-                }
-            } else {
-                // Expanded mode
-                OutlinedTextField(
-                    shape = InputFieldShape,
-                    value = uiState.nickname,
-                    onValueChange = { onNicknameChange(it, expandedMode) },
-                    label = { Text(stringResource(R.string.hostpref_nickname_title)) },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                )
-
-                val isCollapseEnabled = uiState.isNicknameMatching
-                val collapseColor = if (isCollapseEnabled) {
-                    MaterialTheme.colorScheme.primary
-                } else {
-                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                }
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable(enabled = isCollapseEnabled) { expandedMode = false }
-                        .padding(vertical = 4.dp),
-                ) {
-                    Text(
-                        text = stringResource(R.string.host_editor_hide_advanced),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = collapseColor,
-                    )
-                    Spacer(Modifier.width(4.dp))
-                    Icon(
-                        Icons.Default.ExpandLess,
-                        contentDescription = stringResource(R.string.button_collapse),
-                        tint = collapseColor,
-                    )
-                }
-            }
-
-            // Only show individual fields in expanded mode
-            if (expandedMode) {
-                // Protocol selector
-                ExposedDropdownMenuBox(
-                    expanded = showProtocolMenu,
-                    onExpandedChange = { showProtocolMenu = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 4.dp),
-                ) {
+            // Protocol selector
+            ExposedDropdownMenuBox(
+                expanded = showProtocolMenu,
+                onExpandedChange = { showProtocolMenu = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp),
+            ) {
                     OutlinedTextField(
                         shape = InputFieldShape,
                         value = uiState.protocol,
@@ -363,7 +296,6 @@ fun HostEditorScreenContent(
 
                     // Save password section (SSH only)
                     if (uiState.protocol == "ssh") {
-                        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                         OutlinedTextField(
                             shape = InputFieldShape,
                             value = uiState.password,
@@ -396,8 +328,6 @@ fun HostEditorScreenContent(
                         }
                     }
                 }
-            }
-
             // Color selector
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
             ColorSelector(
@@ -413,14 +343,6 @@ fun HostEditorScreenContent(
                 onPubkeySelect = onPubkeyChange,
             )
 
-            // Profile selector
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
-            ProfileSelector(
-                profileId = uiState.profileId,
-                availableProfiles = uiState.availableProfiles,
-                onProfileSelect = onProfileChange,
-            )
-
             // Jump host selector (only for SSH protocol)
             if (uiState.protocol == "ssh") {
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
@@ -430,6 +352,37 @@ fun HostEditorScreenContent(
                     onJumpHostSelect = onJumpHostChange,
                 )
             }
+
+            // Advanced options toggle
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { showAdvanced = !showAdvanced }
+                    .padding(vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = stringResource(R.string.host_editor_show_advanced),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.weight(1f),
+                )
+                Icon(
+                    if (showAdvanced) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                    contentDescription = stringResource(R.string.expand),
+                    tint = MaterialTheme.colorScheme.primary,
+                )
+            }
+
+            if (showAdvanced) {
+            // Profile selector (terminal style)
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+            ProfileSelector(
+                profileId = uiState.profileId,
+                availableProfiles = uiState.availableProfiles,
+                onProfileSelect = onProfileChange,
+            )
 
             // SSH Auth agent
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
@@ -501,6 +454,7 @@ fun HostEditorScreenContent(
                     .fillMaxWidth()
                     .padding(top = 4.dp),
             )
+            }
         }
     }
 }
