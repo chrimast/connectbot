@@ -57,6 +57,7 @@ import org.connectbot.R
 import org.connectbot.data.entity.Host
 import org.connectbot.ui.common.ColorOption
 import org.connectbot.ui.common.FlagIcon
+import org.connectbot.ui.common.InputFieldShape
 import org.connectbot.ui.common.findColorOption
 import org.connectbot.ui.common.getIconColors
 import org.connectbot.ui.common.resolveColorToHex
@@ -141,6 +142,7 @@ fun ShortcutCustomizationDialog(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     OutlinedTextField(
+                        shape = InputFieldShape,
                         value = selectedColorDisplay,
                         onValueChange = {},
                         readOnly = true,
@@ -189,6 +191,7 @@ fun ShortcutCustomizationDialog(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     OutlinedTextField(
+                        shape = InputFieldShape,
                         value = getIconStyleDisplayName(selectedStyle),
                         onValueChange = {},
                         readOnly = true,

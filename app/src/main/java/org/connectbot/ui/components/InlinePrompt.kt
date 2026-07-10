@@ -75,6 +75,7 @@ import androidx.compose.ui.unit.dp
 import org.connectbot.R
 import org.connectbot.service.PromptRequest
 import org.connectbot.service.PromptResponse
+import org.connectbot.ui.common.InputFieldShape
 import org.connectbot.ui.theme.terminal
 
 /**
@@ -230,6 +231,7 @@ private fun StringPromptContent(
         }
 
         OutlinedTextField(
+            shape = InputFieldShape,
             value = text,
             onValueChange = { text = it },
             label = hint?.let { { Text(it, color = terminalColors.overlayTextSecondary) } },

@@ -75,6 +75,7 @@ import org.connectbot.ui.common.FlagIcon
 import org.connectbot.ui.common.getIconColors
 import org.connectbot.ui.common.getLocalizedColorSchemeDescription
 import org.connectbot.ui.common.getLocalizedFontDisplayName
+import org.connectbot.ui.common.InputFieldShape
 import org.connectbot.ui.components.FontDownloadProgressDialog
 import org.connectbot.util.LocalFontProvider
 import org.connectbot.util.TerminalFont
@@ -163,6 +164,7 @@ fun ProfileEditorScreen(
             ) {
                 // Profile Name
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = uiState.name,
                     onValueChange = { viewModel.updateName(it) },
                     label = { Text(stringResource(R.string.profile_editor_name_label)) },
@@ -332,6 +334,7 @@ private fun FontFamilySelector(
             onExpandedChange = { expanded = it },
         ) {
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = getLocalizedFontDisplayName(fontFamily),
                 onValueChange = {},
                 readOnly = true,
@@ -421,6 +424,7 @@ private fun EmulationSelector(
             onExpandedChange = { expanded = it },
         ) {
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = emulation,
                 onValueChange = {},
                 readOnly = true,
@@ -493,6 +497,7 @@ private fun DelKeySelector(
             onExpandedChange = { expanded = it },
         ) {
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = delKey,
                 onValueChange = {},
                 readOnly = true,
@@ -558,6 +563,7 @@ private fun EncodingSelector(
             },
         ) {
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = if (expanded) filterText else encoding,
                 onValueChange = { filterText = it },
                 readOnly = !expanded,
@@ -624,6 +630,7 @@ private fun ColorSchemeSelector(
             onExpandedChange = { expanded = it },
         ) {
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = availableSchemes.find { it.id == colorSchemeId }?.name ?: stringResource(R.string.colorscheme_default),
                 onValueChange = {},
                 readOnly = true,
@@ -691,6 +698,7 @@ private fun IconColorSelector(
             onExpandedChange = { expanded = it },
         ) {
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = selectedDisplayName,
                 onValueChange = {},
                 readOnly = true,
@@ -786,6 +794,7 @@ private fun ForceSizeSelector(
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = columns.toString(),
                     onValueChange = { value ->
                         value.toIntOrNull()?.let { onColumnsChange(it) }
@@ -799,6 +808,7 @@ private fun ForceSizeSelector(
                 Spacer(modifier = Modifier.width(16.dp))
 
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = rows.toString(),
                     onValueChange = { value ->
                         value.toIntOrNull()?.let { onRowsChange(it) }

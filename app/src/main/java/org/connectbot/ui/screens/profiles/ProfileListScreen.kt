@@ -65,6 +65,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.connectbot.R
 import org.connectbot.data.entity.Profile
 import org.connectbot.ui.common.getLocalizedFontDisplayName
+import org.connectbot.ui.common.InputFieldShape
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -254,6 +255,7 @@ private fun CreateProfileDialog(
         text = {
             Column {
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = name,
                     onValueChange = { name = it },
                     label = { Text(stringResource(R.string.profile_create_name_label)) },

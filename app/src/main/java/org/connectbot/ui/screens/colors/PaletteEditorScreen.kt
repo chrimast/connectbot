@@ -74,6 +74,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.connectbot.R
 import org.connectbot.ui.PreviewScreen
+import org.connectbot.ui.common.InputFieldShape
 import org.connectbot.ui.components.ColorPickerDialog
 import org.connectbot.ui.components.RgbColorPickerDialog
 
@@ -347,6 +348,7 @@ private fun SchemeInfoSection(
             }
         } else {
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = schemeName,
                 onValueChange = onUpdateName,
                 label = { Text(stringResource(R.string.label_scheme_name)) },
@@ -356,6 +358,7 @@ private fun SchemeInfoSection(
                 modifier = Modifier.fillMaxWidth(),
             )
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = schemeDescription,
                 onValueChange = onUpdateDescription,
                 label = { Text(stringResource(R.string.label_scheme_description)) },
@@ -659,6 +662,7 @@ private fun DuplicateSchemeDialog(
         title = { Text(stringResource(R.string.dialog_title_new_scheme), style = MaterialTheme.typography.titleMedium) },
         text = {
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = name,
                 onValueChange = { name = it },
                 label = { Text(stringResource(R.string.label_scheme_name)) },

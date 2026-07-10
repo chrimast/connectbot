@@ -60,6 +60,7 @@ import androidx.preference.PreferenceManager
 import org.connectbot.R
 import org.connectbot.data.PresetScript
 import org.connectbot.data.PresetScriptRepository
+import org.connectbot.ui.common.InputFieldShape
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -229,6 +230,7 @@ private fun PresetScriptEditorDialog(
         text = {
             Column {
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = name,
                     onValueChange = { name = it },
                     label = { Text(stringResource(R.string.preset_script_name_label)) },
@@ -236,6 +238,7 @@ private fun PresetScriptEditorDialog(
                     modifier = Modifier.fillMaxWidth(),
                 )
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = body,
                     onValueChange = { body = it },
                     label = { Text(stringResource(R.string.preset_script_body_label)) },

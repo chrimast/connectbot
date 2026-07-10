@@ -103,6 +103,7 @@ import org.connectbot.ui.LocalTerminalManager
 import org.connectbot.ui.PreviewScreen
 import org.connectbot.ui.components.rememberBiometricPromptState
 import org.connectbot.ui.theme.ConnectBotTheme
+import org.connectbot.ui.common.InputFieldShape
 
 internal object PubkeyListTestTags {
     fun itemMenuButton(pubkeyId: Long): String = "pubkey_item_${pubkeyId}_menu_button"
@@ -814,6 +815,7 @@ private fun PubkeyPasswordDialog(
                     modifier = Modifier.padding(bottom = 16.dp),
                 )
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = password,
                     onValueChange = { password = it },
                     label = { Text(stringResource(R.string.prompt_password)) },
@@ -883,6 +885,7 @@ private fun NicknameConfirmationDialog(
         title = { Text(stringResource(R.string.pubkey_import_button), style = MaterialTheme.typography.titleMedium) },
         text = {
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = nickname,
                 onValueChange = { nickname = it },
                 label = { Text(stringResource(R.string.prompt_nickname)) },
@@ -937,6 +940,7 @@ private fun ImportPasswordDialog(
                     modifier = Modifier.padding(bottom = 16.dp),
                 )
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = nickname,
                     onValueChange = { nickname = it },
                     label = { Text(stringResource(R.string.prompt_nickname)) },
@@ -945,6 +949,7 @@ private fun ImportPasswordDialog(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = password,
                     onValueChange = { password = it },
                     label = { Text(stringResource(R.string.prompt_password)) },
@@ -984,6 +989,7 @@ private fun ImportPasswordDialog(
 
                     if (!reusePassword) {
                         OutlinedTextField(
+                            shape = InputFieldShape,
                             value = newPassword,
                             onValueChange = { newPassword = it },
                             label = { Text(stringResource(R.string.pubkey_import_new_password)) },
@@ -995,6 +1001,7 @@ private fun ImportPasswordDialog(
                             singleLine = true,
                         )
                         OutlinedTextField(
+                            shape = InputFieldShape,
                             value = confirmPassword,
                             onValueChange = { confirmPassword = it },
                             label = { Text(stringResource(R.string.pubkey_import_confirm_password)) },
@@ -1047,6 +1054,7 @@ private fun ImportFromClipboardDialog(
         title = { Text(stringResource(R.string.pubkey_import_from_clipboard), style = MaterialTheme.typography.titleMedium) },
         text = {
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = keyText,
                 onValueChange = { keyText = it },
                 label = { Text(stringResource(R.string.pubkey_import_clipboard_key_label)) },
@@ -1106,6 +1114,7 @@ private fun ExportPassphraseDialog(
                     modifier = Modifier.padding(bottom = 16.dp),
                 )
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = passphrase,
                     onValueChange = {
                         passphrase = it
@@ -1118,6 +1127,7 @@ private fun ExportPassphraseDialog(
                     singleLine = true,
                 )
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = confirmPassphrase,
                     onValueChange = {
                         confirmPassphrase = it

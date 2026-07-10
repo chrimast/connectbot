@@ -77,6 +77,7 @@ import org.connectbot.ui.common.FlagIcon
 import org.connectbot.ui.common.getIconColors
 import org.connectbot.ui.common.getLocalizedColorSchemeDescription
 import org.connectbot.ui.common.getLocalizedFontDisplayName
+import org.connectbot.ui.common.InputFieldShape
 import org.connectbot.ui.screens.hostlist.ConnectionState
 import org.connectbot.ui.theme.ConnectBotTheme
 import org.connectbot.util.HostConstants
@@ -207,6 +208,7 @@ fun HostEditorScreenContent(
             if (!expandedMode) {
                 // Quick connect mode
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = uiState.quickConnect,
                     onValueChange = onQuickConnectChange,
                     label = { Text(stringResource(R.string.host_editor_quick_connect_label)) },
@@ -237,6 +239,7 @@ fun HostEditorScreenContent(
             } else {
                 // Expanded mode
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = uiState.nickname,
                     onValueChange = { onNicknameChange(it, expandedMode) },
                     label = { Text(stringResource(R.string.hostpref_nickname_title)) },
@@ -282,6 +285,7 @@ fun HostEditorScreenContent(
                         .padding(top = 4.dp),
                 ) {
                     OutlinedTextField(
+                        shape = InputFieldShape,
                         value = uiState.protocol,
                         onValueChange = {},
                         label = { Text(stringResource(R.string.protocol_spinner_label)) },
@@ -316,6 +320,7 @@ fun HostEditorScreenContent(
                 // Only show username, hostname, and port for non-local protocols
                 if (uiState.protocol != "local") {
                     OutlinedTextField(
+                        shape = InputFieldShape,
                         value = uiState.username,
                         onValueChange = onUsernameChange,
                         label = { Text(stringResource(R.string.hostpref_username_title)) },
@@ -326,6 +331,7 @@ fun HostEditorScreenContent(
                     )
 
                     OutlinedTextField(
+                        shape = InputFieldShape,
                         value = uiState.hostname,
                         onValueChange = onHostnameChange,
                         label = { Text(stringResource(R.string.hostpref_hostname_title)) },
@@ -337,6 +343,7 @@ fun HostEditorScreenContent(
                     )
 
                     OutlinedTextField(
+                        shape = InputFieldShape,
                         value = uiState.port,
                         onValueChange = onPortChange,
                         label = { Text(stringResource(R.string.hostpref_port_title)) },
@@ -358,6 +365,7 @@ fun HostEditorScreenContent(
                     if (uiState.protocol == "ssh") {
                         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                         OutlinedTextField(
+                            shape = InputFieldShape,
                             value = uiState.password,
                             onValueChange = onPasswordChange,
                             label = {
@@ -482,6 +490,7 @@ fun HostEditorScreenContent(
             // Post-login automation
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = uiState.postLogin,
                 onValueChange = onPostLoginChange,
                 label = { Text(stringResource(R.string.hostpref_postlogin_title)) },
@@ -523,6 +532,7 @@ private fun ColorSelector(
             onExpandedChange = { expanded = it },
         ) {
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = selectedDisplayName,
                 onValueChange = {},
                 readOnly = true,
@@ -658,6 +668,7 @@ private fun FontFamilySelector(
             onExpandedChange = { if (enabled) expanded = it },
         ) {
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = if (fontFamily == null) {
                     stringResource(R.string.font_use_default)
                 } else {
@@ -727,6 +738,7 @@ private fun ColorSchemeSelector(
             onExpandedChange = { if (enabled) expanded = it },
         ) {
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = availableSchemes.find { it.id == colorSchemeId }?.name ?: stringResource(R.string.colorscheme_default),
                 onValueChange = {},
                 readOnly = true,
@@ -806,6 +818,7 @@ private fun PubkeySelector(
             onExpandedChange = { expanded = it },
         ) {
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = when (pubkeyId) {
                     -1L -> stringResource(R.string.list_pubkeyids_any)
 
@@ -875,6 +888,7 @@ private fun ProfileSelector(
             onExpandedChange = { expanded = it },
         ) {
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = when {
                     profileId == null -> stringResource(R.string.hostpref_profile_none)
 
@@ -960,6 +974,7 @@ private fun IpVersionSelector(
         modifier = modifier.fillMaxWidth(),
     ) {
         OutlinedTextField(
+            shape = InputFieldShape,
             value = displayLabel,
             onValueChange = {},
             label = { Text(stringResource(R.string.hostpref_ipversion_title)) },
@@ -1023,6 +1038,7 @@ private fun JumpHostSelector(
             onExpandedChange = { expanded = it },
         ) {
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = when {
                     jumpHostId == null || jumpHostId <= 0 -> stringResource(R.string.list_jumphost_none)
 
@@ -1105,6 +1121,7 @@ private fun DelKeySelector(
             onExpandedChange = { if (enabled) expanded = it },
         ) {
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = delKey,
                 onValueChange = {},
                 readOnly = true,
@@ -1170,6 +1187,7 @@ private fun EncodingSelector(
             onExpandedChange = { if (enabled) expanded = it },
         ) {
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = encoding,
                 onValueChange = {},
                 readOnly = true,

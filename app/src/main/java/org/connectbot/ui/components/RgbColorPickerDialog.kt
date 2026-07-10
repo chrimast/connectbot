@@ -47,6 +47,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import org.connectbot.R
+import org.connectbot.ui.common.InputFieldShape
 
 /**
  * Dialog for selecting an RGB color with sliders.
@@ -115,6 +116,7 @@ fun RgbColorPickerDialog(
 
                 // Hex value input
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = hexInput,
                     onValueChange = { newHex ->
                         // Strip # if present

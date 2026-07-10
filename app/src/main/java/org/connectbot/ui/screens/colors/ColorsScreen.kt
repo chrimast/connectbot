@@ -78,6 +78,7 @@ import kotlinx.coroutines.launch
 import org.connectbot.R
 import org.connectbot.data.entity.ColorScheme
 import org.connectbot.ui.PreviewScreen
+import org.connectbot.ui.common.InputFieldShape
 import org.connectbot.ui.common.getLocalizedColorSchemeDescription
 import org.connectbot.ui.theme.ConnectBotTheme
 
@@ -602,6 +603,7 @@ private fun NewSchemeDialog(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = name,
                     onValueChange = { name = it },
                     label = { Text(stringResource(R.string.label_scheme_name)) },
@@ -611,6 +613,7 @@ private fun NewSchemeDialog(
                 )
 
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = description,
                     onValueChange = { description = it },
                     label = { Text(stringResource(R.string.label_scheme_description)) },

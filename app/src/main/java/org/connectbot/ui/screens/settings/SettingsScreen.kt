@@ -95,6 +95,7 @@ import org.connectbot.util.PreferenceConstants
 import org.connectbot.util.TerminalFont
 import org.connectbot.util.ThemeMode
 import org.connectbot.util.isNotificationPermissionGranted
+import org.connectbot.ui.common.InputFieldShape
 import org.xmlpull.v1.XmlPullParser
 import java.util.Locale
 
@@ -840,6 +841,7 @@ private fun WebDavBackupPreference(
     Column(modifier = modifier) {
         Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = uiState.webDavUrl,
                 onValueChange = onUrlChange,
                 label = { Text(stringResource(R.string.pref_webdav_url_title)) },
@@ -847,6 +849,7 @@ private fun WebDavBackupPreference(
                 modifier = Modifier.fillMaxWidth(),
             )
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = uiState.webDavUsername,
                 onValueChange = onUsernameChange,
                 label = { Text(stringResource(R.string.pref_webdav_username_title)) },
@@ -854,6 +857,7 @@ private fun WebDavBackupPreference(
                 modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
             )
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = uiState.webDavPassword,
                 onValueChange = onPasswordChange,
                 label = { Text(stringResource(R.string.pref_webdav_password_title)) },
@@ -861,6 +865,7 @@ private fun WebDavBackupPreference(
                 modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
             )
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = uiState.webDavRemotePath,
                 onValueChange = onRemotePathChange,
                 label = { Text(stringResource(R.string.pref_webdav_remote_path_title)) },
@@ -868,6 +873,7 @@ private fun WebDavBackupPreference(
                 modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
             )
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = uiState.webDavEncryptionPassword,
                 onValueChange = onEncryptionPasswordChange,
                 label = { Text(stringResource(R.string.pref_webdav_encryption_password_title)) },
@@ -953,6 +959,7 @@ private fun TextPreferenceDialog(
         title = { Text(title, style = MaterialTheme.typography.titleMedium) },
         text = {
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = textValue,
                 onValueChange = { textValue = it },
                 singleLine = true,
@@ -1213,6 +1220,7 @@ private fun ListPreferenceWithCustomDialog(
             title = { Text(title, style = MaterialTheme.typography.titleMedium) },
             text = {
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = customValue,
                     onValueChange = { customValue = it },
                     label = { Text(stringResource(R.string.dialog_custom_value_label)) },
@@ -1362,6 +1370,7 @@ private fun AddCustomTerminalTypePreference(
             title = { Text(stringResource(R.string.dialog_customterminal_title), style = MaterialTheme.typography.titleMedium) },
             text = {
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = newTerminalType,
                     onValueChange = { newTerminalType = it },
                     label = { Text(stringResource(R.string.dialog_customterminal_hint)) },
@@ -1462,6 +1471,7 @@ private fun AddCustomFontPreference(
             text = {
                 Column {
                     OutlinedTextField(
+                        shape = InputFieldShape,
                         value = newFontName,
                         onValueChange = {
                             newFontName = it
@@ -1605,6 +1615,7 @@ private fun LocalFontPreference(
             text = {
                 Column {
                     OutlinedTextField(
+                        shape = InputFieldShape,
                         value = fontDisplayName,
                         onValueChange = {
                             fontDisplayName = it

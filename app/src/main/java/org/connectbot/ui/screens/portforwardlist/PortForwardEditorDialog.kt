@@ -50,6 +50,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import org.connectbot.R
+import org.connectbot.ui.common.InputFieldShape
 import org.connectbot.util.HostConstants
 
 enum class SourceAddressOption(val sshValue: String, @StringRes val labelRes: Int) {
@@ -150,6 +151,7 @@ fun PortForwardEditorDialog(
         text = {
             Column {
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = nickname,
                     onValueChange = { nickname = it },
                     label = { Text(stringResource(R.string.prompt_nickname)) },
@@ -167,6 +169,7 @@ fun PortForwardEditorDialog(
                     onExpandedChange = { typeMenuExpanded = it },
                 ) {
                     OutlinedTextField(
+                        shape = InputFieldShape,
                         value = portForwardTypes[typeIndex],
                         onValueChange = {},
                         readOnly = true,
@@ -205,6 +208,7 @@ fun PortForwardEditorDialog(
                             onExpandedChange = { sourceAddressMenuExpanded = it },
                         ) {
                             OutlinedTextField(
+                                shape = InputFieldShape,
                                 value = stringResource(sourceAddressOption.labelRes),
                                 onValueChange = {},
                                 readOnly = true,
@@ -234,6 +238,7 @@ fun PortForwardEditorDialog(
                             Spacer(modifier = Modifier.height(8.dp))
 
                             OutlinedTextField(
+                                shape = InputFieldShape,
                                 value = specificAddress,
                                 onValueChange = { specificAddress = it },
                                 label = { Text(stringResource(R.string.portforward_host_address)) },
@@ -251,6 +256,7 @@ fun PortForwardEditorDialog(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = sourcePort,
                     onValueChange = { sourcePort = it },
                     label = { Text(stringResource(R.string.prompt_source_port)) },
@@ -271,6 +277,7 @@ fun PortForwardEditorDialog(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = destination,
                     onValueChange = { destination = it },
                     label = { Text(stringResource(R.string.prompt_destination)) },

@@ -63,6 +63,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.connectbot.R
 import org.connectbot.ui.PreviewScreen
 import org.connectbot.ui.theme.ConnectBotTheme
+import org.connectbot.ui.common.InputFieldShape
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -161,6 +162,7 @@ fun PubkeyEditorScreenContent(
                 ) {
                     // Nickname
                     OutlinedTextField(
+                        shape = InputFieldShape,
                         value = uiState.nickname,
                         onValueChange = onNicknameChange,
                         label = { Text(stringResource(R.string.prompt_nickname)) },
@@ -178,6 +180,7 @@ fun PubkeyEditorScreenContent(
 
                     // Key Type (read-only)
                     OutlinedTextField(
+                        shape = InputFieldShape,
                         value = uiState.keyType,
                         onValueChange = {},
                         label = { Text(stringResource(R.string.pubkey_editor_key_type_label)) },
@@ -198,6 +201,7 @@ fun PubkeyEditorScreenContent(
 
                     if (uiState.isEncrypted) {
                         OutlinedTextField(
+                            shape = InputFieldShape,
                             value = uiState.oldPassword,
                             onValueChange = onOldPasswordChange,
                             label = { Text(stringResource(R.string.prompt_old_password)) },
@@ -210,6 +214,7 @@ fun PubkeyEditorScreenContent(
                     }
 
                     OutlinedTextField(
+                        shape = InputFieldShape,
                         value = uiState.newPassword1,
                         onValueChange = onNewPassword1Change,
                         label = { Text(stringResource(R.string.prompt_password)) },
@@ -223,6 +228,7 @@ fun PubkeyEditorScreenContent(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     OutlinedTextField(
+                        shape = InputFieldShape,
                         value = uiState.newPassword2,
                         onValueChange = onNewPassword2Change,
                         label = {

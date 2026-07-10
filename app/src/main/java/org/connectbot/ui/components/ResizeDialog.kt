@@ -37,6 +37,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import org.connectbot.R
 import org.connectbot.service.TerminalBridge
+import org.connectbot.ui.common.InputFieldShape
 
 @Composable
 fun ResizeDialog(
@@ -62,6 +63,7 @@ fun ResizeDialog(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = widthText,
                     onValueChange = {
                         widthText = it
@@ -75,6 +77,7 @@ fun ResizeDialog(
                 )
 
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = heightText,
                     onValueChange = {
                         heightText = it

@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.connectbot.R
 import org.connectbot.ui.PreviewScreen
+import org.connectbot.ui.common.InputFieldShape
 import org.connectbot.ui.theme.ConnectBotTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -131,6 +132,7 @@ fun GeneratePubkeyScreenContent(
         ) {
             // Nickname
             OutlinedTextField(
+                shape = InputFieldShape,
                 value = uiState.nickname,
                 onValueChange = onNicknameChange,
                 label = { Text(stringResource(R.string.prompt_nickname)) },
@@ -255,6 +257,7 @@ fun GeneratePubkeyScreenContent(
             // Password (only shown when not using biometric)
             if (!uiState.useBiometric) {
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = uiState.password1,
                     onValueChange = onPassword1Change,
                     label = { Text(stringResource(R.string.prompt_password)) },
@@ -268,6 +271,7 @@ fun GeneratePubkeyScreenContent(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 OutlinedTextField(
+                    shape = InputFieldShape,
                     value = uiState.password2,
                     onValueChange = onPassword2Change,
                     label = { Text("${stringResource(R.string.prompt_password)} ${stringResource(R.string.prompt_again)}") },
