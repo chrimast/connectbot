@@ -455,19 +455,19 @@
 	<string name="color_gray">Gray</string>
 
 	<!-- Country/Region identifiers for host color selection -->
-	<string name="country_cn">🇨🇳 China</string>
-	<string name="country_us">🇺🇸 United States</string>
-	<string name="country_hk">🇭🇰 Hong Kong</string>
-	<string name="country_jp">🇯🇵 Japan</string>
-	<string name="country_sg">🇸🇬 Singapore</string>
-	<string name="country_tw">🇹🇼 Taiwan</string>
-	<string name="country_de">🇩🇪 Germany</string>
-	<string name="country_ru">🇷🇺 Russia</string>
-	<string name="country_nl">🇳🇱 Netherlands</string>
-	<string name="country_fr">🇫🇷 France</string>
-	<string name="country_gb">🇬🇧 United Kingdom</string>
-	<string name="country_in">🇮🇳 India</string>
-	<string name="country_xx">🏳️ Other</string>
+	<string name="country_cn">China</string>
+	<string name="country_us">United States</string>
+	<string name="country_hk">Hong Kong</string>
+	<string name="country_jp">Japan</string>
+	<string name="country_sg">Singapore</string>
+	<string name="country_tw">Taiwan</string>
+	<string name="country_de">Germany</string>
+	<string name="country_ru">Russia</string>
+	<string name="country_nl">Netherlands</string>
+	<string name="country_fr">France</string>
+	<string name="country_gb">United Kingdom</string>
+	<string name="country_in">India</string>
+	<string name="country_xx">Other</string>
 
 	<!-- Host's default font size when opening the terminal in points (pt) -->
 	<string name="hostpref_fontsize_title">"Font size (pt)"</string>

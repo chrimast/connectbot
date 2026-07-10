@@ -140,6 +140,8 @@
   <string name="pref_camera_title">相机快捷键</string>
   <string name="pref_keepalive_title">保持屏幕唤醒</string>
   <string name="pref_keepalive_summary">终端运行时禁止屏幕休眠</string>
+  <string name="pref_swipe_sessions_title">在会话之间滑动</string>
+  <string name="pref_swipe_sessions_summary">启用水平滑动以切换终端会话。默认关闭，以便辅助功能使用。</string>
   <string name="pref_wifilock_title">保持Wi-Fi活动</string>
   <string name="pref_wifilock_summary">会话运行时禁止Wi-Fi关闭</string>
   <string name="pref_bumpyarrows_title">触摸反馈</string>
@@ -598,17 +600,17 @@
   <string name="pref_webdav_restore_now">立即恢复</string>
 
   <!-- Country/Region identifiers -->
-  <string name="country_cn">🇨🇳 中国</string>
-  <string name="country_us">🇺🇸 美国</string>
-  <string name="country_hk">🇭🇰 香港</string>
-  <string name="country_jp">🇯🇵 日本</string>
-  <string name="country_sg">🇸🇬 新加坡</string>
-  <string name="country_tw">🇹🇼 台湾</string>
-  <string name="country_de">🇩🇪 德国</string>
-  <string name="country_ru">🇷🇺 俄罗斯</string>
-  <string name="country_nl">🇳🇱 荷兰</string>
-  <string name="country_fr">🇫🇷 法国</string>
-  <string name="country_gb">🇬🇧 英国</string>
-  <string name="country_in">🇮🇳 印度</string>
-  <string name="country_xx">🏳️ 其他</string>
+  <string name="country_cn">中国</string>
+  <string name="country_us">美国</string>
+  <string name="country_hk">香港</string>
+  <string name="country_jp">日本</string>
+  <string name="country_sg">新加坡</string>
+  <string name="country_tw">台湾</string>
+  <string name="country_de">德国</string>
+  <string name="country_ru">俄罗斯</string>
+  <string name="country_nl">荷兰</string>
+  <string name="country_fr">法国</string>
+  <string name="country_gb">英国</string>
+  <string name="country_in">印度</string>
+  <string name="country_xx">其他</string>
 </resources>
