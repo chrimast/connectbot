@@ -171,13 +171,13 @@ fun ProfileEditorScreen(
                     modifier = Modifier.fillMaxWidth(),
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
                 // Icon Color Section
                 Text(
                     text = stringResource(R.string.profile_editor_section_icon_color),
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(bottom = 8.dp),
+                    modifier = Modifier.padding(bottom = 4.dp),
                 )
 
                 IconColorSelector(
@@ -186,12 +186,12 @@ fun ProfileEditorScreen(
                     modifier = Modifier.fillMaxWidth(),
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
                 // Color Scheme Section
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(bottom = 8.dp),
+                    modifier = Modifier.padding(bottom = 4.dp),
                 ) {
                     Text(
                         text = stringResource(R.string.profile_editor_section_color_scheme),
@@ -213,13 +213,13 @@ fun ProfileEditorScreen(
                     modifier = Modifier.fillMaxWidth(),
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
                 // Font Section
                 Text(
                     text = stringResource(R.string.profile_editor_section_font),
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(bottom = 8.dp),
+                    modifier = Modifier.padding(bottom = 4.dp),
                 )
 
                 FontFamilySelector(
@@ -230,7 +230,7 @@ fun ProfileEditorScreen(
                     modifier = Modifier.fillMaxWidth(),
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 FontSizeSelector(
                     fontSize = uiState.fontSize,
@@ -238,13 +238,13 @@ fun ProfileEditorScreen(
                     modifier = Modifier.fillMaxWidth(),
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
                 // Terminal Section
                 Text(
                     text = stringResource(R.string.profile_editor_section_terminal),
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(bottom = 8.dp),
+                    modifier = Modifier.padding(bottom = 4.dp),
                 )
 
                 EmulationSelector(
@@ -254,7 +254,7 @@ fun ProfileEditorScreen(
                     modifier = Modifier.fillMaxWidth(),
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 DelKeySelector(
                     delKey = uiState.delKey,
@@ -262,7 +262,7 @@ fun ProfileEditorScreen(
                     modifier = Modifier.fillMaxWidth(),
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 EncodingSelector(
                     encoding = uiState.encoding,
@@ -272,7 +272,7 @@ fun ProfileEditorScreen(
                     modifier = Modifier.fillMaxWidth(),
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 ForceSizeSelector(
                     enabled = uiState.forceSizeEnabled,
@@ -284,7 +284,7 @@ fun ProfileEditorScreen(
                     modifier = Modifier.fillMaxWidth(),
                 )
 
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
@@ -324,7 +324,7 @@ private fun FontFamilySelector(
         Text(
             text = stringResource(R.string.profile_editor_font_family_title),
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 8.dp),
+            modifier = Modifier.padding(bottom = 4.dp),
         )
 
         ExposedDropdownMenuBox(
@@ -374,7 +374,7 @@ private fun FontSizeSelector(
         Text(
             text = stringResource(R.string.profile_editor_font_size_title, fontSize),
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 8.dp),
+            modifier = Modifier.padding(bottom = 4.dp),
         )
 
         Slider(
@@ -413,7 +413,7 @@ private fun EmulationSelector(
         Text(
             text = stringResource(R.string.pref_emulation_title),
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 8.dp),
+            modifier = Modifier.padding(bottom = 4.dp),
         )
 
         ExposedDropdownMenuBox(
@@ -485,7 +485,7 @@ private fun DelKeySelector(
         Text(
             text = stringResource(R.string.hostpref_delkey_title),
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 8.dp),
+            modifier = Modifier.padding(bottom = 4.dp),
         )
 
         ExposedDropdownMenuBox(
@@ -545,7 +545,7 @@ private fun EncodingSelector(
         Text(
             text = stringResource(R.string.hostpref_encoding_title),
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 8.dp),
+            modifier = Modifier.padding(bottom = 4.dp),
         )
 
         ExposedDropdownMenuBox(

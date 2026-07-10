@@ -220,7 +220,7 @@ fun HostEditorScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable { expandedMode = true }
-                        .padding(vertical = 8.dp),
+                        .padding(vertical = 4.dp),
                 ) {
                     Text(
                         text = stringResource(R.string.host_editor_show_advanced),
@@ -255,7 +255,7 @@ fun HostEditorScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable(enabled = isCollapseEnabled) { expandedMode = false }
-                        .padding(vertical = 8.dp),
+                        .padding(vertical = 4.dp),
                 ) {
                     Text(
                         text = stringResource(R.string.host_editor_hide_advanced),
@@ -279,7 +279,7 @@ fun HostEditorScreenContent(
                     onExpandedChange = { showProtocolMenu = it },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp),
+                        .padding(top = 4.dp),
                 ) {
                     OutlinedTextField(
                         value = uiState.protocol,
@@ -321,7 +321,7 @@ fun HostEditorScreenContent(
                         label = { Text(stringResource(R.string.hostpref_username_title)) },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 8.dp),
+                            .padding(top = 4.dp),
                         singleLine = true,
                     )
 
@@ -332,7 +332,7 @@ fun HostEditorScreenContent(
                         isError = uiState.hostname.isBlank(),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 8.dp),
+                            .padding(top = 4.dp),
                         singleLine = true,
                     )
 
@@ -342,7 +342,7 @@ fun HostEditorScreenContent(
                         label = { Text(stringResource(R.string.hostpref_port_title)) },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 8.dp),
+                            .padding(top = 4.dp),
                         singleLine = true,
                     )
 
@@ -351,12 +351,12 @@ fun HostEditorScreenContent(
                         ipVersion = uiState.ipVersion,
                         hostname = uiState.hostname,
                         onIpVersionSelect = onIpVersionChange,
-                        modifier = Modifier.padding(top = 8.dp),
+                        modifier = Modifier.padding(top = 4.dp),
                     )
 
                     // Save password section (SSH only)
                     if (uiState.protocol == "ssh") {
-                        HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+                        HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                         OutlinedTextField(
                             value = uiState.password,
                             onValueChange = onPasswordChange,
@@ -391,14 +391,14 @@ fun HostEditorScreenContent(
             }
 
             // Color selector
-            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
             ColorSelector(
                 selectedColor = uiState.color,
                 onColorSelect = onColorChange,
             )
 
             // Pubkey selector
-            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
             PubkeySelector(
                 pubkeyId = uiState.pubkeyId,
                 availablePubkeys = uiState.availablePubkeys,
@@ -406,7 +406,7 @@ fun HostEditorScreenContent(
             )
 
             // Profile selector
-            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
             ProfileSelector(
                 profileId = uiState.profileId,
                 availableProfiles = uiState.availableProfiles,
@@ -415,7 +415,7 @@ fun HostEditorScreenContent(
 
             // Jump host selector (only for SSH protocol)
             if (uiState.protocol == "ssh") {
-                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                 JumpHostSelector(
                     jumpHostId = uiState.jumpHostId,
                     availableJumpHosts = uiState.availableJumpHosts,
@@ -424,7 +424,7 @@ fun HostEditorScreenContent(
             }
 
             // SSH Auth agent
-            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
             SwitchPreference(
                 title = stringResource(R.string.hostpref_authagent_title),
                 checked = uiState.useAuthAgent != "no",
@@ -444,7 +444,7 @@ fun HostEditorScreenContent(
             }
 
             // Compression
-            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
             SwitchPreference(
                 title = stringResource(R.string.hostpref_compression_title),
                 summary = stringResource(R.string.hostpref_compression_summary),
@@ -453,7 +453,7 @@ fun HostEditorScreenContent(
             )
 
             // Want session
-            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
             SwitchPreference(
                 title = stringResource(R.string.hostpref_wantsession_title),
                 summary = stringResource(R.string.hostpref_wantsession_summary),
@@ -462,7 +462,7 @@ fun HostEditorScreenContent(
             )
 
             // Stay connected
-            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
             SwitchPreference(
                 title = stringResource(R.string.hostpref_stayconnected_title),
                 summary = stringResource(R.string.hostpref_stayconnected_summary),
@@ -471,7 +471,7 @@ fun HostEditorScreenContent(
             )
 
             // Quick disconnect
-            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
             SwitchPreference(
                 title = stringResource(R.string.hostpref_quickdisconnect_title),
                 summary = stringResource(R.string.hostpref_quickdisconnect_summary),
@@ -480,7 +480,7 @@ fun HostEditorScreenContent(
             )
 
             // Post-login automation
-            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
             OutlinedTextField(
                 value = uiState.postLogin,
                 onValueChange = onPostLoginChange,
@@ -490,7 +490,7 @@ fun HostEditorScreenContent(
                 maxLines = 8,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 8.dp),
+                    .padding(top = 4.dp),
             )
         }
     }
@@ -515,7 +515,7 @@ private fun ColorSelector(
         Text(
             text = stringResource(R.string.hostpref_color_title),
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 8.dp),
+            modifier = Modifier.padding(bottom = 4.dp),
         )
 
         ExposedDropdownMenuBox(
@@ -575,7 +575,7 @@ private fun FontSizeSelector(
             text = stringResource(R.string.hostpref_fontsize_title),
             style = MaterialTheme.typography.titleMedium,
             color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-            modifier = Modifier.padding(bottom = 8.dp),
+            modifier = Modifier.padding(bottom = 4.dp),
         )
         if (!enabled) {
             Text(
@@ -642,7 +642,7 @@ private fun FontFamilySelector(
             text = stringResource(R.string.hostpref_fontfamily_title),
             style = MaterialTheme.typography.titleMedium,
             color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-            modifier = Modifier.padding(bottom = 8.dp),
+            modifier = Modifier.padding(bottom = 4.dp),
         )
         if (!enabled) {
             Text(
@@ -711,7 +711,7 @@ private fun ColorSchemeSelector(
             text = stringResource(R.string.hostpref_colorscheme_title),
             style = MaterialTheme.typography.titleMedium,
             color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-            modifier = Modifier.padding(bottom = 8.dp),
+            modifier = Modifier.padding(bottom = 4.dp),
         )
         if (!enabled) {
             Text(
@@ -798,7 +798,7 @@ private fun PubkeySelector(
         Text(
             text = stringResource(R.string.hostpref_pubkeyid_title),
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 8.dp),
+            modifier = Modifier.padding(bottom = 4.dp),
         )
 
         ExposedDropdownMenuBox(
@@ -1089,7 +1089,7 @@ private fun DelKeySelector(
             text = stringResource(R.string.hostpref_delkey_title),
             style = MaterialTheme.typography.titleMedium,
             color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-            modifier = Modifier.padding(bottom = 8.dp),
+            modifier = Modifier.padding(bottom = 4.dp),
         )
         if (!enabled) {
             Text(
@@ -1154,7 +1154,7 @@ private fun EncodingSelector(
             text = stringResource(R.string.hostpref_encoding_title),
             style = MaterialTheme.typography.titleMedium,
             color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-            modifier = Modifier.padding(bottom = 8.dp),
+            modifier = Modifier.padding(bottom = 4.dp),
         )
         if (!enabled) {
             Text(
