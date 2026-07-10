@@ -1233,7 +1233,7 @@ fun ConsoleScreen(
                                 onClick = {
                                     showMenu = false
                                     currentBridge?.let { bridge ->
-                                        scannedUrls = listOf("https://ping.pe/${bridge.host.hostname}")
+                                        scannedUrls = bridge.scanForURLs()
                                         showUrlScanDialog = true
                                     }
                                 },
