@@ -146,14 +146,14 @@ fun GeneratePubkeyScreenContent(
                 },
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             // Key Type Selection
             Text(
                 text = stringResource(R.string.pubkey_editor_key_type_label),
                 style = MaterialTheme.typography.titleMedium,
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(2.dp))
 
             KeyTypeOption(
                 label = stringResource(R.string.pubkey_type_rsa),
@@ -177,7 +177,7 @@ fun GeneratePubkeyScreenContent(
                 onClick = { onKeyTypeChange(KeyType.ED25519) },
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             // Bit Strength
             if (uiState.allowBitStrengthChange) {
@@ -185,7 +185,7 @@ fun GeneratePubkeyScreenContent(
                     text = "${stringResource(R.string.prompt_bits)} ${uiState.bits}",
                     style = MaterialTheme.typography.titleMedium,
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(2.dp))
                 Slider(
                     value = uiState.bits.toFloat(),
                     onValueChange = { onBitsChange(it.toInt()) },
@@ -193,7 +193,7 @@ fun GeneratePubkeyScreenContent(
                     steps = ((uiState.maxBits - uiState.minBits) / 8) - 1,
                     modifier = Modifier.fillMaxWidth(),
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(4.dp))
             }
 
             // Biometric Protection Option
@@ -231,7 +231,7 @@ fun GeneratePubkeyScreenContent(
                         onCheckedChange = onUseBiometricChange,
                     )
                 }
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(4.dp))
             }
 
             // Show biometric not enrolled warning
@@ -268,7 +268,7 @@ fun GeneratePubkeyScreenContent(
                     singleLine = true,
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(2.dp))
 
                 OutlinedTextField(
                     shape = InputFieldShape,
@@ -290,7 +290,7 @@ fun GeneratePubkeyScreenContent(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(4.dp))
             }
 
             // Options
@@ -335,7 +335,7 @@ fun GeneratePubkeyScreenContent(
                 Text(stringResource(R.string.pubkey_confirm_use))
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Generate Button
             Button(

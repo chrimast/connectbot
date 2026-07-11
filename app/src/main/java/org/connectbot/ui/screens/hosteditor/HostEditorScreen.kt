@@ -196,7 +196,7 @@ fun HostEditorScreenContent(
                 .padding(padding)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp)
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                 .imePadding(),
         ) {
             // Nickname
@@ -236,6 +236,7 @@ fun HostEditorScreenContent(
                     ExposedDropdownMenu(
                         expanded = showProtocolMenu,
                         onDismissRequest = { showProtocolMenu = false },
+                        shape = InputFieldShape,
                     ) {
                         protocols.forEach { protocol ->
                             DropdownMenuItem(
@@ -309,9 +310,6 @@ fun HostEditorScreenContent(
                                     },
                                 )
                             },
-                            supportingText = {
-                                Text(stringResource(R.string.hostpref_save_password_summary))
-                            },
                             visualTransformation = PasswordVisualTransformation(),
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                             modifier = Modifier.fillMaxWidth(),
@@ -329,14 +327,12 @@ fun HostEditorScreenContent(
                     }
                 }
             // Color selector
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
             ColorSelector(
                 selectedColor = uiState.color,
                 onColorSelect = onColorChange,
             )
 
             // Pubkey selector
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
             PubkeySelector(
                 pubkeyId = uiState.pubkeyId,
                 availablePubkeys = uiState.availablePubkeys,
@@ -345,7 +341,6 @@ fun HostEditorScreenContent(
 
             // Jump host selector (only for SSH protocol)
             if (uiState.protocol == "ssh") {
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                 JumpHostSelector(
                     jumpHostId = uiState.jumpHostId,
                     availableJumpHosts = uiState.availableJumpHosts,
@@ -353,8 +348,10 @@ fun HostEditorScreenContent(
                 )
             }
 
+            Spacer(modifier = Modifier.padding(vertical = 6.dp))
+
             // Advanced options toggle
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 2.dp))
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -363,8 +360,11 @@ fun HostEditorScreenContent(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = stringResource(R.string.host_editor_show_advanced),
-                    style = MaterialTheme.typography.bodyMedium,
+                    text = stringResource(
+                        if (showAdvanced) R.string.host_editor_hide_advanced
+                        else R.string.host_editor_show_advanced,
+                    ),
+                    style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.weight(1f),
                 )
@@ -377,7 +377,6 @@ fun HostEditorScreenContent(
 
             if (showAdvanced) {
             // Profile selector (terminal style)
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
             ProfileSelector(
                 profileId = uiState.profileId,
                 availableProfiles = uiState.availableProfiles,
@@ -385,7 +384,6 @@ fun HostEditorScreenContent(
             )
 
             // SSH Auth agent
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
             SwitchPreference(
                 title = stringResource(R.string.hostpref_authagent_title),
                 checked = uiState.useAuthAgent != "no",
@@ -405,7 +403,7 @@ fun HostEditorScreenContent(
             }
 
             // Compression
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 2.dp))
             SwitchPreference(
                 title = stringResource(R.string.hostpref_compression_title),
                 summary = stringResource(R.string.hostpref_compression_summary),
@@ -414,7 +412,7 @@ fun HostEditorScreenContent(
             )
 
             // Want session
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 2.dp))
             SwitchPreference(
                 title = stringResource(R.string.hostpref_wantsession_title),
                 summary = stringResource(R.string.hostpref_wantsession_summary),
@@ -423,7 +421,7 @@ fun HostEditorScreenContent(
             )
 
             // Stay connected
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 2.dp))
             SwitchPreference(
                 title = stringResource(R.string.hostpref_stayconnected_title),
                 summary = stringResource(R.string.hostpref_stayconnected_summary),
@@ -432,7 +430,7 @@ fun HostEditorScreenContent(
             )
 
             // Quick disconnect
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 2.dp))
             SwitchPreference(
                 title = stringResource(R.string.hostpref_quickdisconnect_title),
                 summary = stringResource(R.string.hostpref_quickdisconnect_summary),
@@ -441,7 +439,7 @@ fun HostEditorScreenContent(
             )
 
             // Post-login automation
-            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 2.dp))
             OutlinedTextField(
                 shape = InputFieldShape,
                 value = uiState.postLogin,
@@ -474,36 +472,32 @@ private fun ColorSelector(
         ?: findColorOption(selectedColor)?.countryCode
         ?: selectedColor
 
-    Column(modifier = modifier) {
-        Text(
-            text = stringResource(R.string.hostpref_color_title),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 4.dp),
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+        modifier = modifier.fillMaxWidth().padding(top = 4.dp),
+    ) {
+        OutlinedTextField(
+            shape = InputFieldShape,
+            value = selectedDisplayName,
+            onValueChange = {},
+            label = { Text(stringResource(R.string.hostpref_color_title)) },
+            readOnly = true,
+            singleLine = true,
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+            },
+            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+            modifier = Modifier
+                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
+                .fillMaxWidth(),
         )
 
-        ExposedDropdownMenuBox(
+        ExposedDropdownMenu(
             expanded = expanded,
-            onExpandedChange = { expanded = it },
+            onDismissRequest = { expanded = false },
+            shape = InputFieldShape,
         ) {
-            OutlinedTextField(
-                shape = InputFieldShape,
-                value = selectedDisplayName,
-                onValueChange = {},
-                readOnly = true,
-                singleLine = true,
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                },
-                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-                modifier = Modifier
-                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                    .fillMaxWidth(),
-            )
-
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-            ) {
                 iconColors.forEach { color ->
                     DropdownMenuItem(
                         text = { Text(color.localizedName) },
@@ -523,7 +517,6 @@ private fun ColorSelector(
                     )
                 }
             }
-        }
     }
 }
 
@@ -644,6 +637,7 @@ private fun FontFamilySelector(
             ExposedDropdownMenu(
                 expanded = expanded && enabled,
                 onDismissRequest = { expanded = false },
+                shape = InputFieldShape,
             ) {
                 allOptions.forEach { (label, value) ->
                     DropdownMenuItem(
@@ -710,6 +704,7 @@ private fun ColorSchemeSelector(
             ExposedDropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
+                shape = InputFieldShape,
             ) {
                 availableSchemes.forEach { scheme ->
                     DropdownMenuItem(
@@ -760,55 +755,48 @@ private fun PubkeySelector(
 
     val allOptions = defaultOptions + pubkeyOptions
 
-    Column(modifier = modifier) {
-        Text(
-            text = stringResource(R.string.hostpref_pubkeyid_title),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 4.dp),
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+        modifier = modifier.fillMaxWidth().padding(top = 4.dp),
+    ) {
+        OutlinedTextField(
+            shape = InputFieldShape,
+            value = when (pubkeyId) {
+                -1L -> stringResource(R.string.list_pubkeyids_any)
+                -2L -> stringResource(R.string.list_pubkeyids_none)
+                else -> {
+                    val selectedPubkey = availablePubkeys.find { it.id == pubkeyId }
+                    selectedPubkey?.nickname ?: stringResource(R.string.pubkey_unknown)
+                }
+            },
+            onValueChange = {},
+            label = { Text(stringResource(R.string.hostpref_pubkeyid_title)) },
+            readOnly = true,
+            singleLine = true,
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+            },
+            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+            modifier = Modifier
+                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
+                .fillMaxWidth(),
         )
 
-        ExposedDropdownMenuBox(
+        ExposedDropdownMenu(
             expanded = expanded,
-            onExpandedChange = { expanded = it },
+            onDismissRequest = { expanded = false },
+            shape = InputFieldShape,
         ) {
-            OutlinedTextField(
-                shape = InputFieldShape,
-                value = when (pubkeyId) {
-                    -1L -> stringResource(R.string.list_pubkeyids_any)
-
-                    -2L -> stringResource(R.string.list_pubkeyids_none)
-
-                    else -> {
-                        val selectedPubkey = availablePubkeys.find { it.id == pubkeyId }
-                        selectedPubkey?.nickname ?: stringResource(R.string.pubkey_unknown)
-                    }
-                },
-                onValueChange = {},
-                readOnly = true,
-                singleLine = true,
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                },
-                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-                modifier = Modifier
-                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                    .fillMaxWidth(),
-            )
-
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-            ) {
-                allOptions.forEach { (label, id) ->
-                    DropdownMenuItem(
-                        text = { Text(label) },
-                        onClick = {
-                            onPubkeySelect(id)
-                            expanded = false
-                        },
-                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                    )
-                }
+            allOptions.forEach { (label, id) ->
+                DropdownMenuItem(
+                    text = { Text(label) },
+                    onClick = {
+                        onPubkeySelect(id)
+                        expanded = false
+                    },
+                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                )
             }
         }
     }
@@ -824,70 +812,56 @@ private fun ProfileSelector(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    Column(modifier = modifier) {
-        Text(
-            text = stringResource(R.string.hostpref_profile_title),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 4.dp),
-        )
-        Text(
-            text = stringResource(R.string.hostpref_profile_summary),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(bottom = 8.dp),
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+        modifier = modifier.fillMaxWidth().padding(top = 4.dp),
+    ) {
+        OutlinedTextField(
+            shape = InputFieldShape,
+            value = when {
+                profileId == null -> stringResource(R.string.hostpref_profile_none)
+                else -> {
+                    val selectedProfile = availableProfiles.find { it.id == profileId }
+                    selectedProfile?.name ?: stringResource(R.string.hostpref_profile_none)
+                }
+            },
+            onValueChange = {},
+            label = { Text(stringResource(R.string.hostpref_profile_title)) },
+            supportingText = { Text(stringResource(R.string.hostpref_profile_summary)) },
+            readOnly = true,
+            singleLine = true,
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+            },
+            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+            modifier = Modifier
+                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
+                .fillMaxWidth(),
         )
 
-        ExposedDropdownMenuBox(
+        ExposedDropdownMenu(
             expanded = expanded,
-            onExpandedChange = { expanded = it },
+            onDismissRequest = { expanded = false },
+            shape = InputFieldShape,
         ) {
-            OutlinedTextField(
-                shape = InputFieldShape,
-                value = when {
-                    profileId == null -> stringResource(R.string.hostpref_profile_none)
-
-                    else -> {
-                        val selectedProfile = availableProfiles.find { it.id == profileId }
-                        selectedProfile?.name ?: stringResource(R.string.hostpref_profile_none)
-                    }
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.hostpref_profile_none)) },
+                onClick = {
+                    onProfileSelect(null)
+                    expanded = false
                 },
-                onValueChange = {},
-                readOnly = true,
-                singleLine = true,
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                },
-                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-                modifier = Modifier
-                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                    .fillMaxWidth(),
+                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
             )
-
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-            ) {
-                // "None" option
+            availableProfiles.forEach { profile ->
                 DropdownMenuItem(
-                    text = { Text(stringResource(R.string.hostpref_profile_none)) },
+                    text = { Text(profile.name) },
                     onClick = {
-                        onProfileSelect(null)
+                        onProfileSelect(profile.id)
                         expanded = false
                     },
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                 )
-
-                // Available profiles
-                availableProfiles.forEach { profile ->
-                    DropdownMenuItem(
-                        text = { Text(profile.name) },
-                        onClick = {
-                            onProfileSelect(profile.id)
-                            expanded = false
-                        },
-                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                    )
-                }
             }
         }
     }
@@ -949,6 +923,7 @@ private fun IpVersionSelector(
         ExposedDropdownMenu(
             expanded = expanded && !isLiteralIp,
             onDismissRequest = { expanded = false },
+            shape = InputFieldShape,
         ) {
             options.forEach { (value, label) ->
                 DropdownMenuItem(
@@ -974,70 +949,56 @@ private fun JumpHostSelector(
 ) {
     var expanded by remember { mutableStateOf(false) }
 
-    Column(modifier = modifier) {
-        Text(
-            text = stringResource(R.string.hostpref_jumphost_title),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 4.dp),
-        )
-        Text(
-            text = stringResource(R.string.hostpref_jumphost_summary),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(bottom = 8.dp),
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+        modifier = modifier.fillMaxWidth().padding(top = 4.dp),
+    ) {
+        OutlinedTextField(
+            shape = InputFieldShape,
+            value = when {
+                jumpHostId == null || jumpHostId <= 0 -> stringResource(R.string.list_jumphost_none)
+                else -> {
+                    val selectedHost = availableJumpHosts.find { it.id == jumpHostId }
+                    selectedHost?.nickname ?: stringResource(R.string.list_jumphost_none)
+                }
+            },
+            onValueChange = {},
+            label = { Text(stringResource(R.string.hostpref_jumphost_title)) },
+            supportingText = { Text(stringResource(R.string.hostpref_jumphost_summary)) },
+            readOnly = true,
+            singleLine = true,
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+            },
+            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+            modifier = Modifier
+                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
+                .fillMaxWidth(),
         )
 
-        ExposedDropdownMenuBox(
+        ExposedDropdownMenu(
             expanded = expanded,
-            onExpandedChange = { expanded = it },
+            onDismissRequest = { expanded = false },
+            shape = InputFieldShape,
         ) {
-            OutlinedTextField(
-                shape = InputFieldShape,
-                value = when {
-                    jumpHostId == null || jumpHostId <= 0 -> stringResource(R.string.list_jumphost_none)
-
-                    else -> {
-                        val selectedHost = availableJumpHosts.find { it.id == jumpHostId }
-                        selectedHost?.nickname ?: stringResource(R.string.list_jumphost_none)
-                    }
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.list_jumphost_none)) },
+                onClick = {
+                    onJumpHostSelect(null)
+                    expanded = false
                 },
-                onValueChange = {},
-                readOnly = true,
-                singleLine = true,
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                },
-                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-                modifier = Modifier
-                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                    .fillMaxWidth(),
+                contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
             )
-
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-            ) {
-                // "None" option for direct connection
+            availableJumpHosts.forEach { host ->
                 DropdownMenuItem(
-                    text = { Text(stringResource(R.string.list_jumphost_none)) },
+                    text = { Text(host.nickname) },
                     onClick = {
-                        onJumpHostSelect(null)
+                        onJumpHostSelect(host.id)
                         expanded = false
                     },
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                 )
-
-                // Available jump hosts
-                availableJumpHosts.forEach { host ->
-                    DropdownMenuItem(
-                        text = { Text(host.nickname) },
-                        onClick = {
-                            onJumpHostSelect(host.id)
-                            expanded = false
-                        },
-                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                    )
-                }
             }
         }
     }
@@ -1093,6 +1054,7 @@ private fun DelKeySelector(
             ExposedDropdownMenu(
                 expanded = expanded && enabled,
                 onDismissRequest = { expanded = false },
+                shape = InputFieldShape,
             ) {
                 options.forEach { option ->
                     DropdownMenuItem(
@@ -1159,6 +1121,7 @@ private fun EncodingSelector(
             ExposedDropdownMenu(
                 expanded = expanded && enabled,
                 onDismissRequest = { expanded = false },
+                shape = InputFieldShape,
             ) {
                 encodings.forEach { enc ->
                     DropdownMenuItem(
@@ -1187,7 +1150,7 @@ private fun SwitchPreference(
         modifier = modifier
             .fillMaxWidth()
             .clickable { onCheckedChange(!checked) }
-            .padding(vertical = 8.dp),
+            .padding(vertical = 2.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(modifier = Modifier.weight(1f)) {

@@ -559,18 +559,12 @@
 	<string name="profile_editor_title_edit">Edit Profile</string>
 	<!-- Content description for the save button that saves profile changes -->
 	<string name="profile_editor_save">Save</string>
-	<!-- Label for the text field where user enters the profile name -->
-	<string name="profile_editor_name_label">Profile Name</string>
-	<!-- Section header for icon color selection area -->
-	<string name="profile_editor_section_icon_color">Icon Color</string>
+	<!-- Label for the text field where user enters the style name -->
+	<string name="profile_editor_name_label">Style Name</string>
 	<!-- Section header for color scheme selection area -->
 	<string name="profile_editor_section_color_scheme">Color Scheme</string>
-	<!-- Section header for font configuration area -->
-	<string name="profile_editor_section_font">Font</string>
-	<!-- Section header for terminal emulation settings area -->
-	<string name="profile_editor_section_terminal">Terminal</string>
-	<!-- Subsection title for font family selector -->
-	<string name="profile_editor_font_family_title">Font Family</string>
+	<!-- Subsection title for font style selector -->
+	<string name="profile_editor_font_family_title">Font Style</string>
 	<!-- Subsection title showing current font size. Parameter is the font size in points. -->
 	<string name="profile_editor_font_size_title">Font Size: %d</string>
 	<!-- Subsection title for force size settings -->
@@ -583,8 +577,6 @@
 	<string name="profile_editor_force_size_columns">Columns</string>
 	<!-- Label for the force size rows input field -->
 	<string name="profile_editor_force_size_rows">Rows</string>
-	<!-- Dropdown option to not override host color with profile color -->
-	<string name="profile_icon_color_none">None (use host color)</string>
 
 	<!-- Profile list screen strings -->
 	<!-- Window title for the profiles list screen -->
@@ -600,9 +592,9 @@
 	<!-- Menu item to delete a profile -->
 	<string name="profile_list_delete">Delete</string>
 	<!-- Dialog title when creating a new profile -->
-	<string name="profile_create_dialog_title">Create Profile</string>
-	<!-- Label for the profile name text field in create dialog -->
-	<string name="profile_create_name_label">Profile Name</string>
+	<string name="profile_create_dialog_title">Create Style</string>
+	<!-- Label for the profile name field in the create dialog -->
+	<string name="profile_create_name_label">Style Name</string>
 	<!-- Button text to confirm creating a new profile -->
 	<string name="profile_create_button">Create</string>
 	<!-- Button text to cancel creating a new profile -->

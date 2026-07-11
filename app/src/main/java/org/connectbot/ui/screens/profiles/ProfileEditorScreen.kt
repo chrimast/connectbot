@@ -70,16 +70,12 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import org.connectbot.BuildConfig
 import org.connectbot.R
 import org.connectbot.data.entity.ColorScheme
-import org.connectbot.ui.common.findColorOption
-import org.connectbot.ui.common.FlagIcon
-import org.connectbot.ui.common.getIconColors
 import org.connectbot.ui.common.getLocalizedColorSchemeDescription
 import org.connectbot.ui.common.getLocalizedFontDisplayName
 import org.connectbot.ui.common.InputFieldShape
 import org.connectbot.ui.components.FontDownloadProgressDialog
 import org.connectbot.util.LocalFontProvider
 import org.connectbot.util.TerminalFont
-import org.connectbot.ui.screens.hostlist.ConnectionState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -159,7 +155,7 @@ fun ProfileEditorScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
-                    .padding(16.dp)
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                     .verticalScroll(rememberScrollState()),
             ) {
                 // Profile Name
@@ -173,56 +169,14 @@ fun ProfileEditorScreen(
                     modifier = Modifier.fillMaxWidth(),
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Icon Color Section
-                Text(
-                    text = stringResource(R.string.profile_editor_section_icon_color),
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(bottom = 4.dp),
-                )
-
-                IconColorSelector(
-                    selectedColor = uiState.iconColor,
-                    onSelectColor = { viewModel.updateIconColor(it) },
-                    modifier = Modifier.fillMaxWidth(),
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Color Scheme Section
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(bottom = 4.dp),
-                ) {
-                    Text(
-                        text = stringResource(R.string.profile_editor_section_color_scheme),
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.weight(1f),
-                    )
-                    IconButton(onClick = onNavigateToColors) {
-                        Icon(
-                            Icons.Default.Palette,
-                            contentDescription = stringResource(R.string.menu_manage_colors),
-                        )
-                    }
-                }
-
                 ColorSchemeSelector(
                     colorSchemeId = uiState.colorSchemeId,
                     availableSchemes = uiState.availableColorSchemes,
                     onSelectColorScheme = { viewModel.updateColorSchemeId(it) },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(top = 2.dp),
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Font Section
-                Text(
-                    text = stringResource(R.string.profile_editor_section_font),
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(bottom = 4.dp),
-                )
+                Spacer(modifier = Modifier.height(2.dp))
 
                 FontFamilySelector(
                     fontFamily = uiState.fontFamily,
@@ -240,14 +194,7 @@ fun ProfileEditorScreen(
                     modifier = Modifier.fillMaxWidth(),
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
-
-                // Terminal Section
-                Text(
-                    text = stringResource(R.string.profile_editor_section_terminal),
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(bottom = 4.dp),
-                )
+                Spacer(modifier = Modifier.height(2.dp))
 
                 EmulationSelector(
                     emulation = uiState.emulation,
@@ -322,36 +269,32 @@ private fun FontFamilySelector(
     }
     val allOptions = presetOptions + customOptions + localOptions
 
-    Column(modifier = modifier) {
-        Text(
-            text = stringResource(R.string.profile_editor_font_family_title),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 4.dp),
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+        modifier = modifier.fillMaxWidth().padding(top = 2.dp),
+    ) {
+        OutlinedTextField(
+            shape = InputFieldShape,
+            value = getLocalizedFontDisplayName(fontFamily),
+            onValueChange = {},
+            label = { Text(stringResource(R.string.profile_editor_font_family_title)) },
+            readOnly = true,
+            singleLine = true,
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+            },
+            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+            modifier = Modifier
+                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
+                .fillMaxWidth(),
         )
 
-        ExposedDropdownMenuBox(
+        ExposedDropdownMenu(
             expanded = expanded,
-            onExpandedChange = { expanded = it },
+            onDismissRequest = { expanded = false },
+            shape = InputFieldShape,
         ) {
-            OutlinedTextField(
-                shape = InputFieldShape,
-                value = getLocalizedFontDisplayName(fontFamily),
-                onValueChange = {},
-                readOnly = true,
-                singleLine = true,
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                },
-                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-                modifier = Modifier
-                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                    .fillMaxWidth(),
-            )
-
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-            ) {
                 allOptions.forEach { (displayName, value) ->
                     DropdownMenuItem(
                         text = { Text(displayName) },
@@ -363,7 +306,6 @@ private fun FontFamilySelector(
                     )
                 }
             }
-        }
     }
 }
 
@@ -412,36 +354,32 @@ private fun EmulationSelector(
         "dumb",
     )
 
-    Column(modifier = modifier) {
-        Text(
-            text = stringResource(R.string.pref_emulation_title),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 4.dp),
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+        modifier = modifier.fillMaxWidth().padding(top = 2.dp),
+    ) {
+        OutlinedTextField(
+            shape = InputFieldShape,
+            value = emulation,
+            onValueChange = {},
+            label = { Text(stringResource(R.string.pref_emulation_title)) },
+            readOnly = true,
+            singleLine = true,
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+            },
+            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+            modifier = Modifier
+                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
+                .fillMaxWidth(),
         )
 
-        ExposedDropdownMenuBox(
+        ExposedDropdownMenu(
             expanded = expanded,
-            onExpandedChange = { expanded = it },
+            onDismissRequest = { expanded = false },
+            shape = InputFieldShape,
         ) {
-            OutlinedTextField(
-                shape = InputFieldShape,
-                value = emulation,
-                onValueChange = {},
-                readOnly = true,
-                singleLine = true,
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                },
-                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-                modifier = Modifier
-                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                    .fillMaxWidth(),
-            )
-
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-            ) {
                 presetOptions.forEach { option ->
                     DropdownMenuItem(
                         text = { Text(option) },
@@ -471,7 +409,6 @@ private fun EmulationSelector(
                     }
                 }
             }
-        }
     }
 }
 
@@ -485,36 +422,32 @@ private fun DelKeySelector(
     var expanded by remember { mutableStateOf(false) }
     val options = listOf("del", "backspace")
 
-    Column(modifier = modifier) {
-        Text(
-            text = stringResource(R.string.hostpref_delkey_title),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 4.dp),
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+        modifier = modifier.fillMaxWidth().padding(top = 2.dp),
+    ) {
+        OutlinedTextField(
+            shape = InputFieldShape,
+            value = delKey,
+            onValueChange = {},
+            label = { Text(stringResource(R.string.hostpref_delkey_title)) },
+            readOnly = true,
+            singleLine = true,
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+            },
+            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+            modifier = Modifier
+                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
+                .fillMaxWidth(),
         )
 
-        ExposedDropdownMenuBox(
+        ExposedDropdownMenu(
             expanded = expanded,
-            onExpandedChange = { expanded = it },
+            onDismissRequest = { expanded = false },
+            shape = InputFieldShape,
         ) {
-            OutlinedTextField(
-                shape = InputFieldShape,
-                value = delKey,
-                onValueChange = {},
-                readOnly = true,
-                singleLine = true,
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                },
-                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-                modifier = Modifier
-                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                    .fillMaxWidth(),
-            )
-
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-            ) {
                 options.forEach { option ->
                     DropdownMenuItem(
                         text = { Text(option) },
@@ -526,7 +459,6 @@ private fun DelKeySelector(
                     )
                 }
             }
-        }
     }
 }
 
@@ -540,77 +472,44 @@ private fun EncodingSelector(
     modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var filterText by remember { mutableStateOf("") }
 
-    val filteredCommon = commonEncodings.filter { it.contains(filterText, ignoreCase = true) }
-    val filteredAll = allEncodings.filter { it.contains(filterText, ignoreCase = true) }
-    val showDivider = filteredCommon.isNotEmpty() && filteredAll.isNotEmpty()
-
-    Column(modifier = modifier) {
-        Text(
-            text = stringResource(R.string.hostpref_encoding_title),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 4.dp),
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = it },
+        modifier = modifier.fillMaxWidth().padding(top = 2.dp),
+    ) {
+        OutlinedTextField(
+            shape = InputFieldShape,
+            value = encoding,
+            onValueChange = {},
+            label = { Text(stringResource(R.string.hostpref_encoding_title)) },
+            readOnly = true,
+            singleLine = true,
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+            },
+            colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+            modifier = Modifier
+                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
+                .fillMaxWidth(),
         )
 
-        ExposedDropdownMenuBox(
+        ExposedDropdownMenu(
             expanded = expanded,
-            onExpandedChange = {
-                if (!it) {
-                    filterText = ""
-                }
-                expanded = it
-            },
+            onDismissRequest = { expanded = false },
+            shape = InputFieldShape,
         ) {
-            OutlinedTextField(
-                shape = InputFieldShape,
-                value = if (expanded) filterText else encoding,
-                onValueChange = { filterText = it },
-                readOnly = !expanded,
-                singleLine = true,
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                },
-                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-                modifier = Modifier
-                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryEditable)
-                    .fillMaxWidth(),
-            )
-
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = {
-                    filterText = ""
-                    expanded = false
-                },
-            ) {
-                filteredCommon.forEach { enc ->
+                commonEncodings.forEach { enc ->
                     DropdownMenuItem(
                         text = { Text(enc) },
                         onClick = {
                             onSelectEncoding(enc)
-                            filterText = ""
-                            expanded = false
-                        },
-                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                    )
-                }
-                if (showDivider) {
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
-                }
-                filteredAll.forEach { enc ->
-                    DropdownMenuItem(
-                        text = { Text(enc) },
-                        onClick = {
-                            onSelectEncoding(enc)
-                            filterText = ""
                             expanded = false
                         },
                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                     )
                 }
             }
-        }
     }
 }
 
@@ -633,6 +532,7 @@ private fun ColorSchemeSelector(
                 shape = InputFieldShape,
                 value = availableSchemes.find { it.id == colorSchemeId }?.name ?: stringResource(R.string.colorscheme_default),
                 onValueChange = {},
+                label = { Text(stringResource(R.string.profile_editor_section_color_scheme)) },
                 readOnly = true,
                 singleLine = true,
                 trailingIcon = {
@@ -647,6 +547,7 @@ private fun ColorSchemeSelector(
             ExposedDropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
+                shape = InputFieldShape,
             ) {
                 availableSchemes.forEach { scheme ->
                     DropdownMenuItem(
@@ -675,80 +576,6 @@ private fun ColorSchemeSelector(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun IconColorSelector(
-    selectedColor: String?,
-    onSelectColor: (String?) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    var expanded by remember { mutableStateOf(false) }
-    val iconColors = getIconColors()
-
-    // Resolve display name via findColorOption (countryCode → hex → englishName → null)
-    val selectedDisplayName = if (selectedColor == null) {
-        stringResource(R.string.profile_icon_color_none)
-    } else {
-        findColorOption(selectedColor)?.localizedName ?: selectedColor
-    }
-
-    Column(modifier = modifier) {
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = it },
-        ) {
-            OutlinedTextField(
-                shape = InputFieldShape,
-                value = selectedDisplayName,
-                onValueChange = {},
-                readOnly = true,
-                singleLine = true,
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                },
-                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
-                modifier = Modifier
-                    .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                    .fillMaxWidth(),
-            )
-
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-            ) {
-                // None option
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.profile_icon_color_none)) },
-                    onClick = {
-                        onSelectColor(null)
-                        expanded = false
-                    },
-                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                )
-                // Color options
-                iconColors.forEach { color ->
-                    DropdownMenuItem(
-                        text = { Text(color.localizedName) },
-                        leadingIcon = {
-                            FlagIcon(
-                                colorValue = color.countryCode,
-                                borderColor = Color.Transparent,
-                                connectionState = ConnectionState.UNKNOWN,
-                                modifier = Modifier.size(24.dp),
-                            )
-                        },
-                        onClick = {
-                            onSelectColor(color.countryCode)
-                            expanded = false
-                        },
-                        contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
-                    )
-                }
-            }
-        }
-    }
-}
-
 @Composable
 private fun ForceSizeSelector(
     enabled: Boolean,
@@ -759,12 +586,7 @@ private fun ForceSizeSelector(
     onColumnsChange: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
-        Text(
-            text = stringResource(R.string.profile_editor_force_size_title),
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 4.dp),
-        )
+    Column(modifier = modifier.padding(top = 2.dp)) {
         Text(
             text = stringResource(R.string.profile_editor_force_size_summary),
             style = MaterialTheme.typography.bodySmall,

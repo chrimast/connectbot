@@ -27,12 +27,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -77,6 +79,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -770,8 +773,9 @@ private fun PreferenceCategory(
     Column(modifier = modifier) {
         ListItem(
             headlineContent = { Text(title, style = MaterialTheme.typography.titleMedium) },
+            modifier = Modifier.height(44.dp),
         )
-        HorizontalDivider()
+        HorizontalDivider(modifier = Modifier.padding(vertical = 0.dp))
     }
 }
 
@@ -791,12 +795,12 @@ private fun CollapsiblePreferenceGroup(
         )
         if (expanded) {
             CompositionLocalProvider(LocalIndentLevel provides true) {
-                Column(modifier = Modifier.padding(start = 12.dp)) {
+                Column(modifier = Modifier.padding(start = 8.dp)) {
                     content()
                 }
             }
         }
-        HorizontalDivider()
+        HorizontalDivider(modifier = Modifier.padding(vertical = 0.dp))
     }
 }
 
@@ -819,12 +823,11 @@ private fun SwitchPreference(
                     onCheckedChange = onCheckedChange,
                 )
             },
-            colors = ListItemDefaults.colors(
-                containerColor = highlightColor,
-            ),
-            modifier = Modifier.clickable { onCheckedChange(!checked) },
+            modifier = Modifier
+                .clickable { onCheckedChange(!checked) }
+                .background(highlightColor),
         )
-        HorizontalDivider()
+        HorizontalDivider(modifier = Modifier.padding(vertical = 0.dp))
     }
 }
 
@@ -841,7 +844,7 @@ private fun WebDavBackupPreference(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 2.dp)) {
             OutlinedTextField(
                 shape = InputFieldShape,
                 value = uiState.webDavUrl,
@@ -856,7 +859,7 @@ private fun WebDavBackupPreference(
                 onValueChange = onUsernameChange,
                 label = { Text(stringResource(R.string.pref_webdav_username_title)) },
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                modifier = Modifier.fillMaxWidth().padding(top = 2.dp),
             )
             OutlinedTextField(
                 shape = InputFieldShape,
@@ -864,7 +867,7 @@ private fun WebDavBackupPreference(
                 onValueChange = onPasswordChange,
                 label = { Text(stringResource(R.string.pref_webdav_password_title)) },
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                modifier = Modifier.fillMaxWidth().padding(top = 2.dp),
             )
             OutlinedTextField(
                 shape = InputFieldShape,
@@ -872,7 +875,7 @@ private fun WebDavBackupPreference(
                 onValueChange = onRemotePathChange,
                 label = { Text(stringResource(R.string.pref_webdav_remote_path_title)) },
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                modifier = Modifier.fillMaxWidth().padding(top = 2.dp),
             )
             OutlinedTextField(
                 shape = InputFieldShape,
@@ -880,9 +883,9 @@ private fun WebDavBackupPreference(
                 onValueChange = onEncryptionPasswordChange,
                 label = { Text(stringResource(R.string.pref_webdav_encryption_password_title)) },
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                modifier = Modifier.fillMaxWidth().padding(top = 2.dp),
             )
-            Row(modifier = Modifier.padding(top = 12.dp)) {
+            Row(modifier = Modifier.padding(top = 4.dp)) {
                 Button(
                     onClick = onBackup,
                     enabled = !uiState.webDavOperationInProgress,
@@ -899,7 +902,7 @@ private fun WebDavBackupPreference(
             }
             if (uiState.webDavOperationInProgress) {
                 CircularProgressIndicator(
-                    modifier = Modifier.padding(top = 12.dp).size(24.dp),
+                    modifier = Modifier.padding(top = 4.dp).size(24.dp),
                     strokeWidth = 2.dp,
                 )
             }
@@ -907,11 +910,11 @@ private fun WebDavBackupPreference(
                 Text(
                     text = message,
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(top = 8.dp),
+                    modifier = Modifier.padding(top = 2.dp),
                 )
             }
         }
-        HorizontalDivider()
+        HorizontalDivider(modifier = Modifier.padding(vertical = 0.dp))
     }
 }
 
@@ -931,7 +934,7 @@ private fun TextPreference(
             supportingContent = { Text(summary) },
             modifier = Modifier.clickable { showDialog = true },
         )
-        HorizontalDivider()
+        HorizontalDivider(modifier = Modifier.padding(vertical = 0.dp))
 
         if (showDialog) {
             TextPreferenceDialog(
@@ -998,7 +1001,7 @@ private fun ListPreference(
             supportingContent = { Text(summary) },
             modifier = Modifier.clickable { showDialog = true },
         )
-        HorizontalDivider()
+        HorizontalDivider(modifier = Modifier.padding(vertical = 0.dp))
 
         if (showDialog) {
             ListPreferenceDialog(
@@ -1081,7 +1084,7 @@ private fun LanguageListPreference(
             supportingContent = { Text(summary) },
             modifier = Modifier.clickable { showDialog = true },
         )
-        HorizontalDivider()
+        HorizontalDivider(modifier = Modifier.padding(vertical = 0.dp))
 
         if (showDialog) {
             LanguageListPreferenceDialog(
@@ -1199,7 +1202,7 @@ private fun ListPreferenceWithCustom(
             supportingContent = { Text(summary) },
             modifier = Modifier.clickable { showDialog = true },
         )
-        HorizontalDivider()
+        HorizontalDivider(modifier = Modifier.padding(vertical = 0.dp))
 
         if (showDialog) {
             ListPreferenceWithCustomDialog(
@@ -1279,7 +1282,7 @@ private fun ListPreferenceWithCustomDialog(
                             modifier = Modifier.clickable { onConfirm(entryValue) },
                         )
                     }
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 0.dp))
                     ListItem(
                         headlineContent = {
                             Text(
@@ -1310,9 +1313,9 @@ private fun SliderPreference(
     onValueChange: (Float) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
+    Column(modifier = modifier.padding(vertical = 0.dp)) {
         Column(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 2.dp),
         ) {
             Text(
                 text = title,
@@ -1324,7 +1327,7 @@ private fun SliderPreference(
                 valueRange = 0f..1f,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 4.dp),
+                    .padding(top = 2.dp),
             )
             Text(
                 text = "${(value * 100).toInt()}%",
@@ -1332,7 +1335,7 @@ private fun SliderPreference(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
-        HorizontalDivider()
+        HorizontalDivider(modifier = Modifier.padding(vertical = 0.dp))
     }
 }
 
@@ -1372,11 +1375,10 @@ private fun AddCustomTerminalTypePreference(
                         )
                     }
                 },
-                modifier = Modifier.padding(start = 16.dp),
             )
         }
 
-        HorizontalDivider()
+        HorizontalDivider(modifier = Modifier.padding(vertical = 0.dp))
     }
 
     if (showAddDialog) {
@@ -1469,11 +1471,10 @@ private fun AddCustomFontPreference(
                         )
                     }
                 },
-                modifier = Modifier.padding(start = 16.dp),
             )
         }
 
-        HorizontalDivider()
+        HorizontalDivider(modifier = Modifier.padding(vertical = 0.dp))
     }
 
     if (showAddDialog) {
@@ -1580,11 +1581,8 @@ private fun LocalFontPreference(
             headlineContent = { Text(stringResource(R.string.pref_localfont_title)) },
             supportingContent = {
                 Text(
-                    if (importInProgress) {
-                        stringResource(R.string.font_importing)
-                    } else {
-                        stringResource(R.string.pref_localfont_summary)
-                    },
+                    if (importInProgress) stringResource(R.string.font_importing)
+                    else stringResource(R.string.pref_localfont_summary),
                 )
             },
             modifier = Modifier.clickable(enabled = !importInProgress) {
@@ -1611,11 +1609,10 @@ private fun LocalFontPreference(
                         )
                     }
                 },
-                modifier = Modifier.padding(start = 16.dp),
             )
         }
 
-        HorizontalDivider()
+        HorizontalDivider(modifier = Modifier.padding(vertical = 0.dp))
     }
 
     // Dialog to get display name for imported font
